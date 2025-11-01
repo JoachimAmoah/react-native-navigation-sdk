@@ -484,6 +484,48 @@
   completionBlock([ObjectTranslationUtil transformCircleToDictionary:circle]);
 }
 
+- (void)coordinateForPoint:(NSDictionary *)point result:(OnDictionaryResult)completionBlock {
+  CGPoint cgPoint =
+      CGPointMake([[point objectForKey:@"x"] floatValue], [[point objectForKey:@"y"] floatValue]);
+  CLLocationCoordinate2D coordinate = [_mapView.projection coordinateForPoint:cgPoint];
+
+  NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
+  result[@"lat"] = @(coordinate.latitude);
+  result[@"lng"] = @(coordinate.longitude);
+
+  completionBlock(result);
+}
+
+- (void)pointForCoordinate:(NSDictionary *)coordinate result:(OnDictionaryResult)completionBlock {
+  CLLocationCoordinate2D latLng = [ObjectTranslationUtil getLocationCoordinateFrom:coordinate];
+  CGPoint point = [_mapView.projection pointForCoordinate:latLng];
+
+  NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
+  result[@"x"] = @(point.x);
+  result[@"y"] = @(point.y);
+
+  completionBlock(result);
+}
+
+- (void)fitBounds:(NSDictionary *)boundsOptions result:(OnDictionaryResult)completionBlock {
+  NSDictionary *bounds = [boundsOptions objectForKey:@"bounds"];
+  CLLocationCoordinate2D northEast =
+      [ObjectTranslationUtil getLocationCoordinateFrom:[bounds objectForKey:@"northEast"]];
+  CLLocationCoordinate2D southWest =
+      [ObjectTranslationUtil getLocationCoordinateFrom:[bounds objectForKey:@"southWest"]];
+
+  NSDictionary *padding = [boundsOptions objectForKey:@"padding"];
+  float top = [[padding objectForKey:@"top"] floatValue];
+  float left = [[padding objectForKey:@"left"] floatValue];
+  float bottom = [[padding objectForKey:@"bottom"] floatValue];
+  float right = [[padding objectForKey:@"right"] floatValue];
+  UIEdgeInsets padding = UIEdgeInsetsMake(top, left, bottom, right);
+
+  [_mapView animateWithCameraUpdate:[GMSCameraUpdate fitBounds:bounds withEdgeInsets:padding]]
+
+      completionBlock(nil);
+}
+
 - (void)addMarker:(NSDictionary *)markerOptions result:(OnDictionaryResult)completionBlock {
   NSDictionary *position = [markerOptions objectForKey:@"position"];
   CLLocationCoordinate2D coordinatePosition =

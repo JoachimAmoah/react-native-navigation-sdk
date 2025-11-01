@@ -16,7 +16,12 @@
 
 import { NativeModules } from 'react-native';
 import type { MapViewAutoController, NavigationAutoCallbacks } from './types';
-import { useModuleListeners, type Location } from '../shared';
+import {
+  useModuleListeners,
+  type Location,
+  type Point,
+  type LatLng,
+} from '../shared';
 import type {
   MapType,
   CircleOptions,
@@ -30,6 +35,7 @@ import type {
   CameraPosition,
   UISettings,
   Padding,
+  BoundsOptions,
 } from '../maps';
 import { useMemo } from 'react';
 
@@ -75,6 +81,18 @@ export const useNavigationAuto = (): {
 
       addCircle: async (circleOptions: CircleOptions): Promise<Circle> => {
         return await NavAutoModule.addCircle(circleOptions);
+      },
+
+      coordinateForPoint: async (point: Point): Promise<LatLng> => {
+        return await NavAutoModule.coordinateForPoint(point);
+      },
+
+      pointForCoordinate: async (coordinate: LatLng): Promise<Point> => {
+        return await NavAutoModule.pointForCoordinate(coordinate);
+      },
+
+      fitBounds: async (boundsOptions: BoundsOptions) => {
+        return await NavAutoModule.fitBounds(boundsOptions);
       },
 
       addMarker: async (markerOptions: MarkerOptions): Promise<Marker> => {

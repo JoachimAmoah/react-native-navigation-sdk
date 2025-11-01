@@ -105,9 +105,8 @@ RCT_CUSTOM_VIEW_PROPERTY(stylingOptions, NSDictionary *, NavView) {
   [view applyStylingOptions:options];
 }
 
-RCT_EXPORT_METHOD(moveCamera
-                  : (nonnull NSNumber *)reactTag cameraPosition
-                  : (NSDictionary *)cameraPosition) {
+RCT_EXPORT_METHOD(moveCamera : (nonnull NSNumber *)reactTag cameraPosition : (NSDictionary *)
+                      cameraPosition) {
   dispatch_async(dispatch_get_main_queue(), ^{
     NavViewController *viewController = [self getViewControllerForTag:reactTag];
     if (viewController) {
@@ -116,9 +115,8 @@ RCT_EXPORT_METHOD(moveCamera
   });
 }
 
-RCT_EXPORT_METHOD(setTripProgressBarEnabled
-                  : (nonnull NSNumber *)reactTag isEnabled
-                  : (BOOL)isEnabled) {
+RCT_EXPORT_METHOD(setTripProgressBarEnabled : (nonnull NSNumber *)reactTag isEnabled : (BOOL)
+                      isEnabled) {
   dispatch_async(dispatch_get_main_queue(), ^{
     NavViewController *viewController = [self getViewControllerForTag:reactTag];
     if (viewController) {
@@ -127,9 +125,8 @@ RCT_EXPORT_METHOD(setTripProgressBarEnabled
   });
 }
 
-RCT_EXPORT_METHOD(setReportIncidentButtonEnabled
-                  : (nonnull NSNumber *)reactTag isEnabled
-                  : (BOOL)isEnabled) {
+RCT_EXPORT_METHOD(setReportIncidentButtonEnabled : (nonnull NSNumber *)reactTag isEnabled : (BOOL)
+                      isEnabled) {
   dispatch_async(dispatch_get_main_queue(), ^{
     NavViewController *viewController = [self getViewControllerForTag:reactTag];
     if (viewController) {
@@ -138,9 +135,8 @@ RCT_EXPORT_METHOD(setReportIncidentButtonEnabled
   });
 }
 
-RCT_EXPORT_METHOD(setNavigationUIEnabled
-                  : (nonnull NSNumber *)reactTag isEnabled
-                  : (BOOL)isEnabled) {
+RCT_EXPORT_METHOD(setNavigationUIEnabled : (nonnull NSNumber *)reactTag isEnabled : (BOOL)
+                      isEnabled) {
   dispatch_async(dispatch_get_main_queue(), ^{
     NavViewController *viewController = [self getViewControllerForTag:reactTag];
     if (viewController) {
@@ -149,9 +145,8 @@ RCT_EXPORT_METHOD(setNavigationUIEnabled
   });
 }
 
-RCT_EXPORT_METHOD(setFollowingPerspective
-                  : (nonnull NSNumber *)reactTag index
-                  : (nonnull NSNumber *)index) {
+RCT_EXPORT_METHOD(setFollowingPerspective : (nonnull NSNumber *)
+                      reactTag index : (nonnull NSNumber *)index) {
   dispatch_async(dispatch_get_main_queue(), ^{
     NavViewController *viewController = [self getViewControllerForTag:reactTag];
     if (viewController) {
@@ -169,9 +164,8 @@ RCT_EXPORT_METHOD(setNightMode : (nonnull NSNumber *)reactTag index : (nonnull N
   });
 }
 
-RCT_EXPORT_METHOD(setSpeedometerEnabled
-                  : (nonnull NSNumber *)reactTag isEnabled
-                  : (BOOL)isEnabled) {
+RCT_EXPORT_METHOD(setSpeedometerEnabled : (nonnull NSNumber *)reactTag isEnabled : (BOOL)
+                      isEnabled) {
   dispatch_async(dispatch_get_main_queue(), ^{
     NavViewController *viewController = [self getViewControllerForTag:reactTag];
     if (viewController) {
@@ -180,9 +174,8 @@ RCT_EXPORT_METHOD(setSpeedometerEnabled
   });
 }
 
-RCT_EXPORT_METHOD(setSpeedLimitIconEnabled
-                  : (nonnull NSNumber *)reactTag isEnabled
-                  : (BOOL)isEnabled) {
+RCT_EXPORT_METHOD(setSpeedLimitIconEnabled : (nonnull NSNumber *)reactTag isEnabled : (BOOL)
+                      isEnabled) {
   dispatch_async(dispatch_get_main_queue(), ^{
     NavViewController *viewController = [self getViewControllerForTag:reactTag];
     if (viewController) {
@@ -191,9 +184,8 @@ RCT_EXPORT_METHOD(setSpeedLimitIconEnabled
   });
 }
 
-RCT_EXPORT_METHOD(setRecenterButtonEnabled
-                  : (nonnull NSNumber *)reactTag isEnabled
-                  : (BOOL)isEnabled) {
+RCT_EXPORT_METHOD(setRecenterButtonEnabled : (nonnull NSNumber *)reactTag isEnabled : (BOOL)
+                      isEnabled) {
   dispatch_async(dispatch_get_main_queue(), ^{
     NavViewController *viewController = [self getViewControllerForTag:reactTag];
     if (viewController) {
@@ -247,9 +239,8 @@ RCT_EXPORT_METHOD(removeCircle : (nonnull NSNumber *)reactTag params : (NSString
   });
 }
 
-RCT_EXPORT_METHOD(removeGroundOverlay
-                  : (nonnull NSNumber *)reactTag params
-                  : (NSString *)overlayId) {
+RCT_EXPORT_METHOD(removeGroundOverlay : (nonnull NSNumber *)reactTag params : (NSString *)
+                      overlayId) {
   dispatch_async(dispatch_get_main_queue(), ^{
     NavViewController *viewController = [self getViewControllerForTag:reactTag];
     if (viewController) {
@@ -295,9 +286,8 @@ RCT_EXPORT_METHOD(setCompassEnabled : (nonnull NSNumber *)reactTag isEnabled : (
   });
 }
 
-RCT_EXPORT_METHOD(setMyLocationButtonEnabled
-                  : (nonnull NSNumber *)reactTag isEnabled
-                  : (BOOL)isEnabled) {
+RCT_EXPORT_METHOD(setMyLocationButtonEnabled : (nonnull NSNumber *)reactTag isEnabled : (BOOL)
+                      isEnabled) {
   dispatch_async(dispatch_get_main_queue(), ^{
     NavViewController *viewController = [self getViewControllerForTag:reactTag];
     if (viewController) {
@@ -315,9 +305,8 @@ RCT_EXPORT_METHOD(setMyLocationEnabled : (nonnull NSNumber *)reactTag isEnabled 
   });
 }
 
-RCT_EXPORT_METHOD(setRotateGesturesEnabled
-                  : (nonnull NSNumber *)reactTag isEnabled
-                  : (BOOL)isEnabled) {
+RCT_EXPORT_METHOD(setRotateGesturesEnabled : (nonnull NSNumber *)reactTag isEnabled : (BOOL)
+                      isEnabled) {
   dispatch_async(dispatch_get_main_queue(), ^{
     NavViewController *viewController = [self getViewControllerForTag:reactTag];
     if (viewController) {
@@ -326,9 +315,8 @@ RCT_EXPORT_METHOD(setRotateGesturesEnabled
   });
 }
 
-RCT_EXPORT_METHOD(setScrollGesturesEnabled
-                  : (nonnull NSNumber *)reactTag isEnabled
-                  : (BOOL)isEnabled) {
+RCT_EXPORT_METHOD(setScrollGesturesEnabled : (nonnull NSNumber *)reactTag isEnabled : (BOOL)
+                      isEnabled) {
   dispatch_async(dispatch_get_main_queue(), ^{
     NavViewController *viewController = [self getViewControllerForTag:reactTag];
     if (viewController) {
@@ -337,9 +325,8 @@ RCT_EXPORT_METHOD(setScrollGesturesEnabled
   });
 }
 
-RCT_EXPORT_METHOD(setScrollGesturesEnabledDuringRotateOrZoom
-                  : (nonnull NSNumber *)reactTag isEnabled
-                  : (BOOL)isEnabled) {
+RCT_EXPORT_METHOD(setScrollGesturesEnabledDuringRotateOrZoom : (nonnull NSNumber *)
+                      reactTag isEnabled : (BOOL)isEnabled) {
   dispatch_async(dispatch_get_main_queue(), ^{
     NavViewController *viewController = [self getViewControllerForTag:reactTag];
     if (viewController) {
@@ -348,9 +335,8 @@ RCT_EXPORT_METHOD(setScrollGesturesEnabledDuringRotateOrZoom
   });
 }
 
-RCT_EXPORT_METHOD(setTiltGesturesEnabled
-                  : (nonnull NSNumber *)reactTag isEnabled
-                  : (BOOL)isEnabled) {
+RCT_EXPORT_METHOD(setTiltGesturesEnabled : (nonnull NSNumber *)reactTag isEnabled : (BOOL)
+                      isEnabled) {
   dispatch_async(dispatch_get_main_queue(), ^{
     NavViewController *viewController = [self getViewControllerForTag:reactTag];
     if (viewController) {
@@ -359,9 +345,8 @@ RCT_EXPORT_METHOD(setTiltGesturesEnabled
   });
 }
 
-RCT_EXPORT_METHOD(setZoomGesturesEnabled
-                  : (nonnull NSNumber *)reactTag isEnabled
-                  : (BOOL)isEnabled) {
+RCT_EXPORT_METHOD(setZoomGesturesEnabled : (nonnull NSNumber *)reactTag isEnabled : (BOOL)
+                      isEnabled) {
   dispatch_async(dispatch_get_main_queue(), ^{
     NavViewController *viewController = [self getViewControllerForTag:reactTag];
     if (viewController) {
@@ -379,9 +364,8 @@ RCT_EXPORT_METHOD(setBuildingsEnabled : (nonnull NSNumber *)reactTag isEnabled :
   });
 }
 
-RCT_EXPORT_METHOD(setTrafficIncidentCardsEnabled
-                  : (nonnull NSNumber *)reactTag isEnabled
-                  : (BOOL)isEnabled) {
+RCT_EXPORT_METHOD(setTrafficIncidentCardsEnabled : (nonnull NSNumber *)reactTag isEnabled : (BOOL)
+                      isEnabled) {
   dispatch_async(dispatch_get_main_queue(), ^{
     NavViewController *viewController = [self getViewControllerForTag:reactTag];
     if (viewController) {
@@ -417,10 +401,8 @@ RCT_EXPORT_METHOD(resetMinMaxZoomLevel : (nonnull NSNumber *)reactTag) {
   });
 }
 
-RCT_EXPORT_METHOD(animateCamera
-                  : (nonnull NSNumber *)reactTag latitude
-                  : (nonnull NSNumber *)latitude longitude
-                  : (nonnull NSNumber *)longitude) {
+RCT_EXPORT_METHOD(animateCamera : (nonnull NSNumber *)reactTag latitude : (nonnull NSNumber *)
+                      latitude longitude : (nonnull NSNumber *)longitude) {
   dispatch_async(dispatch_get_main_queue(), ^{
     GMSCameraPosition *cameraPosition =
         [GMSCameraPosition cameraWithLatitude:[latitude doubleValue]
@@ -434,9 +416,8 @@ RCT_EXPORT_METHOD(animateCamera
   });
 }
 
-RCT_EXPORT_METHOD(setMapStyle
-                  : (nonnull NSNumber *)reactTag jsonStyleString
-                  : (NSString *)jsonStyleString) {
+RCT_EXPORT_METHOD(setMapStyle : (nonnull NSNumber *)reactTag jsonStyleString : (NSString *)
+                      jsonStyleString) {
   dispatch_async(dispatch_get_main_queue(), ^{
     NSError *error;
     GMSMapStyle *mapStyle = [GMSMapStyle styleWithJSONString:jsonStyleString error:&error];
@@ -486,12 +467,8 @@ RCT_EXPORT_METHOD(clearMapView : (nonnull NSNumber *)reactTag) {
   });
 }
 
-RCT_EXPORT_METHOD(setPadding
-                  : (nonnull NSNumber *)reactTag top
-                  : (nonnull NSNumber *)top left
-                  : (nonnull NSNumber *)left bottom
-                  : (nonnull NSNumber *)bottom right
-                  : (nonnull NSNumber *)right) {
+RCT_EXPORT_METHOD(setPadding : (nonnull NSNumber *)reactTag top : (nonnull NSNumber *)top left : (
+    nonnull NSNumber *)left bottom : (nonnull NSNumber *)bottom right : (nonnull NSNumber *)right) {
   dispatch_async(dispatch_get_main_queue(), ^{
     NavViewController *viewController = [self getViewControllerForTag:reactTag];
     if (viewController) {
