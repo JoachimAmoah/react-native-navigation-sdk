@@ -519,9 +519,9 @@
   float left = [[padding objectForKey:@"left"] floatValue];
   float bottom = [[padding objectForKey:@"bottom"] floatValue];
   float right = [[padding objectForKey:@"right"] floatValue];
-  UIEdgeInsets padding = UIEdgeInsetsMake(top, left, bottom, right);
+  UIEdgeInsets edgeInsets = UIEdgeInsetsMake(top, left, bottom, right);
 
-  [_mapView animateWithCameraUpdate:[GMSCameraUpdate fitBounds:bounds withEdgeInsets:padding]]
+  [_mapView animateWithCameraUpdate:[GMSCameraUpdate fitBounds:bounds withEdgeInsets:edgeInsets]]
 
       completionBlock(nil);
 }
