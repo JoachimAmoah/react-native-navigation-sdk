@@ -521,9 +521,12 @@
   float right = [[padding objectForKey:@"right"] floatValue];
   UIEdgeInsets edgeInsets = UIEdgeInsetsMake(top, left, bottom, right);
 
-  [_mapView animateWithCameraUpdate:[GMSCameraUpdate fitBounds:bounds withEdgeInsets:edgeInsets]]
+  GMSCoordinateBounds *coordBounds = [[GMSCoordinateBounds alloc] initWithCoordinate:northEast
+                                                                          coordinate:southWest];
+  [_mapView animateWithCameraUpdate:[GMSCameraUpdate fitBounds:coordBounds
+                                                withEdgeInsets:edgeInsets]];
 
-      completionBlock(nil);
+  completionBlock(nil);
 }
 
 - (void)addMarker:(NSDictionary *)markerOptions result:(OnDictionaryResult)completionBlock {
