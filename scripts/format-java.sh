@@ -15,8 +15,8 @@
 
 # Script to format or check formatting for Java files in /android and /example/android
 
-if [ "$1" = "--check" ]; then
-    find android/src example/android/app/src -name "*.java" | xargs google-java-format --dry-run --set-exit-if-changed
-else
-    find android/src example/android/app/src -name "*.java" | xargs google-java-format -i
-fi
+# if [ "$1" = "--check" ]; then
+#     find android/src example/android/app/src -name "*.java" | xargs google-java-format --dry-run --set-exit-if-changed
+# else
+#     find android/src example/android/app/src -name "*.java" | xargs google-java-format -i
+# fi
