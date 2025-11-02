@@ -72,6 +72,16 @@
       handleMapClick:[ObjectTranslationUtil transformCoordinateToDictionary:coordinate]];
 }
 
+- (void)mapView:(GMSMapView *)mapView didChangeCameraPosition:(GMSCameraPosition *)cameraPosition {
+  [self.callbacks
+      handleMapDrag:[ObjectTranslationUtil transformCameraPositionToDictionary:cameraPosition]];
+}
+
+- (void)mapView:(GMSMapView *)mapView idleAtCameraPosition:(GMSCameraPosition *)cameraPosition {
+  [self.callbacks
+      handleMapDragEnd:[ObjectTranslationUtil transformCameraPositionToDictionary:cameraPosition]];
+}
+
 - (BOOL)mapView:(GMSMapView *)mapView didTapMarker:(GMSMarker *)marker {
   [self.callbacks handleMarkerClick:marker];
   return FALSE;
@@ -176,17 +186,7 @@
 }
 
 - (void)getCameraPosition:(OnDictionaryResult)completionBlock {
-  GMSCameraPosition *cam = _mapView.camera;
-  CLLocationCoordinate2D cameraPosition = _mapView.camera.target;
-
-  NSMutableDictionary *map = [[NSMutableDictionary alloc] init];
-  map[@"bearing"] = @(cam.bearing);
-  map[@"tilt"] = @(cam.viewingAngle);
-  map[@"zoom"] = @(cam.zoom);
-
-  map[@"target"] = @{@"lat" : @(cameraPosition.latitude), @"lng" : @(cameraPosition.longitude)};
-
-  completionBlock(map);
+  completionBlock([ObjectTranslationUtil transformCameraPositionToDictionary:_mapView.camera]);
 }
 
 - (void)getMyLocation:(OnDictionaryResult)completionBlock {
@@ -527,6 +527,27 @@
                                                 withEdgeInsets:edgeInsets]];
 
   completionBlock(nil);
+}
+
+- (void)getBounds:(OnDictionaryResult)completionBlock {
+  GMSVisibleRegion visibleRegion = [_mapView.projection visibleRegion];
+  GMSCoordinateBounds *bounds =
+      [[GMSCoordinateBounds alloc] initWithCoordinate:visibleRegion.nearLeft
+                                           coordinate:visibleRegion.farRight];
+  CLLocationCoordinate2D northEast = bounds.northEast;
+  CLLocationCoordinate2D southWest = bounds.southWest;
+
+  NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
+  result[@"northEast"] = @{
+    @"lat" : @(northEast.latitude),
+    @"lng" : @(northEast.longitude),
+  };
+  result[@"southWest"] = @{
+    @"lat" : @(southWest.latitude),
+    @"lng" : @(southWest.longitude),
+  };
+
+  completionBlock(result);
 }
 
 - (void)addMarker:(NSDictionary *)markerOptions result:(OnDictionaryResult)completionBlock {

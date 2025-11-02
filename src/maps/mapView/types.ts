@@ -202,6 +202,18 @@ export interface MapViewCallbacks {
    * @param latLng position where the click occurred.
    */
   onMapClick?(latLng: LatLng): void;
+
+  /**
+   * Callback invoked repeated when map is being dragged.
+   * @param position The camera position at that instant.
+   */
+  onMapDrag?(position: CameraPosition): void;
+
+  /**
+   * Callback invoked when map drag ends.
+   * @param position The camera position at that instant.
+   */
+  onMapDragEnd?(latLng: CameraPosition): void;
 }
 
 export interface MapViewController {
@@ -258,6 +270,12 @@ export interface MapViewController {
    * @param boundsOptions - Object specifying the bounds options.
    */
   fitBounds(boundsOptions: BoundsOptions): Promise<void>;
+
+  /**
+   * Retrieves the rectangular bounds of the map view.
+   * @param bounds - Object specifying the bounds.
+   */
+  getBounds(): Promise<Bounds>;
 
   /**
    * Add a marker to the map.

@@ -15,7 +15,7 @@
  */
 
 import { NativeModules } from 'react-native';
-import type { Location, Point, LatLng } from '../../shared/types';
+import type { Location, Point, LatLng, Bounds } from '../../shared/types';
 import { commands, sendCommand } from '../../shared/viewManager';
 import type {
   CameraPosition,
@@ -66,6 +66,10 @@ export const getMapViewController = (viewId: number): MapViewController => {
 
     fitBounds: async (boundsOptions: BoundsOptions) => {
       return await NavViewModule.fitBounds(viewId, boundsOptions);
+    },
+
+    getBounds: async (): Promise<Bounds> => {
+      return await NavViewModule.getBounds(viewId);
     },
 
     addMarker: async (markerOptions: MarkerOptions): Promise<Marker> => {

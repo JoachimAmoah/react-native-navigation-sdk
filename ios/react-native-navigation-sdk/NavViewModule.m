@@ -228,6 +228,20 @@ RCT_EXPORT_METHOD(fitBounds : (nonnull NSNumber *)reactTag boundsOptions : (NSDi
   });
 }
 
+RCT_EXPORT_METHOD(getBounds : (nonnull NSNumber *)reactTag resolver : (RCTPromiseResolveBlock)
+                      resolve rejecter : (RCTPromiseRejectBlock)reject) {
+  dispatch_async(dispatch_get_main_queue(), ^{
+    NavViewController *viewController = [self getViewControllerForTag:reactTag];
+    if (viewController) {
+      [viewController getBounds:^(NSDictionary *result) {
+        resolve(result);
+      }];
+    } else {
+      reject(@"no_view_controller", @"No viewController found", nil);
+    }
+  });
+}
+
 RCT_EXPORT_METHOD(addGroundOverlay : (nonnull NSNumber *)reactTag overlayOptions : (NSDictionary *)
                       overlayOptions resolver : (RCTPromiseResolveBlock)
                           resolve rejecter : (RCTPromiseRejectBlock)reject) {

@@ -20,6 +20,7 @@ import { Button, Text, View } from 'react-native';
 import Snackbar from 'react-native-snackbar';
 
 import {
+  type CameraPosition,
   type Circle,
   type LatLng,
   type MapViewCallbacks,
@@ -115,6 +116,12 @@ const IntegrationTestsScreen = () => {
       },
       onMapClick: (latLng: LatLng) => {
         console.log('Map 1, onMapClick:', latLng);
+      },
+      onMapDrag: (position: CameraPosition) => {
+        console.log('Map 1, onMapDrag:', position);
+      },
+      onMapDragEnd: (position: CameraPosition) => {
+        console.log('Map 1, onMapDragEnd:', position);
       },
     }),
     [mapViewController, onMapReady]

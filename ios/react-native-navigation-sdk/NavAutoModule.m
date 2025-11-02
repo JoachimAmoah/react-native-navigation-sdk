@@ -187,6 +187,19 @@ RCT_EXPORT_METHOD(fitBounds : (NSDictionary *)boundsOptions resolver : (RCTPromi
   });
 }
 
+RCT_EXPORT_METHOD(getBounds : (RCTPromiseResolveBlock)resolve rejecter : (RCTPromiseRejectBlock)
+                      reject) {
+  dispatch_async(dispatch_get_main_queue(), ^{
+    if (self->_viewController) {
+      [self->_viewController getBounds:^(NSDictionary *result) {
+        resolve(result);
+      }];
+    } else {
+      reject(@"no_view_controller", @"No viewController found", nil);
+    }
+  });
+}
+
 RCT_EXPORT_METHOD(addPolyline : (NSDictionary *)polylineOptions resolver : (RCTPromiseResolveBlock)
                       resolve rejecter : (RCTPromiseRejectBlock)reject) {
   dispatch_async(dispatch_get_main_queue(), ^{

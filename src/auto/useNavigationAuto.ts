@@ -21,6 +21,7 @@ import {
   type Location,
   type Point,
   type LatLng,
+  type Bounds,
 } from '../shared';
 import type {
   MapType,
@@ -93,6 +94,10 @@ export const useNavigationAuto = (): {
 
       fitBounds: async (boundsOptions: BoundsOptions) => {
         return await NavAutoModule.fitBounds(boundsOptions);
+      },
+
+      getBounds: async (): Promise<Bounds> => {
+        return await NavAutoModule.getBounds();
       },
 
       addMarker: async (markerOptions: MarkerOptions): Promise<Marker> => {

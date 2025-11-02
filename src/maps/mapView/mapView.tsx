@@ -26,6 +26,7 @@ import {
   type Marker,
   type Polygon,
   type Polyline,
+  type CameraPosition,
 } from '..';
 
 export const MapView = (props: MapViewProps): React.JSX.Element => {
@@ -59,6 +60,20 @@ export const MapView = (props: MapViewProps): React.JSX.Element => {
   const onMapClick = useCallback(
     ({ nativeEvent: latlng }: { nativeEvent: LatLng }) => {
       props.mapViewCallbacks?.onMapClick?.(latlng);
+    },
+    [props.mapViewCallbacks]
+  );
+
+  const onMapDrag = useCallback(
+    ({ nativeEvent: position }: { nativeEvent: CameraPosition }) => {
+      props.mapViewCallbacks?.onMapDrag?.(position);
+    },
+    [props.mapViewCallbacks]
+  );
+
+  const onMapDragEnd = useCallback(
+    ({ nativeEvent: position }: { nativeEvent: CameraPosition }) => {
+      props.mapViewCallbacks?.onMapDragEnd?.(position);
     },
     [props.mapViewCallbacks]
   );
@@ -116,6 +131,8 @@ export const MapView = (props: MapViewProps): React.JSX.Element => {
         flex={1}
         fragmentType={FragmentType.MAP}
         onMapClick={onMapClick}
+        onMapDrag={onMapDrag}
+        onMapDragEnd={onMapDragEnd}
         onMapReady={onMapReady}
         onMarkerClick={onMarkerClick}
         onPolylineClick={onPolylineClick}

@@ -76,6 +76,7 @@ typedef void (^OnArrayResult)(NSArray *_Nullable result);
 - (void)coordinateForPoint:(NSDictionary *)point result:(OnDictionaryResult)completionBlock;
 - (void)pointForCoordinate:(NSDictionary *)coordinate result:(OnDictionaryResult)completionBlock;
 - (void)fitBounds:(NSDictionary *)boundsOptions result:(OnDictionaryResult)completionBlock;
+- (void)getBounds:(OnDictionaryResult)completionBlock;
 - (GMSMapView *)mapView;
 - (void)showRouteOverview;
 - (void)removeMarker:(NSString *)markerId;
