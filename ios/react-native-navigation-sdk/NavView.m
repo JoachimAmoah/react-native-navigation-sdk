@@ -52,6 +52,10 @@
   }
 }
 
+- (void)insertReactSubview:(UIView *)subView atIndex:(NSInteger)atIndex {
+  NSLog(@"Subviewhere: %@", subView);
+}
+
 - (NavViewController *)initializeViewControllerWithFragmentType:(FragmentType)fragmentType {
   // FragmentType 0 = MAP, 1 = NAVIGATION.
   _viewController.isNavigationEnabled = fragmentType == NAVIGATION;

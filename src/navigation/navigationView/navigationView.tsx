@@ -27,7 +27,7 @@ import {
   type Marker,
   type Polygon,
   type Polyline,
-  type CameraPosition,
+  type DragResult,
 } from '../../maps';
 
 export const NavigationView = (
@@ -80,15 +80,15 @@ export const NavigationView = (
   );
 
   const onMapDrag = useCallback(
-    ({ nativeEvent: position }: { nativeEvent: CameraPosition }) => {
-      props.mapViewCallbacks?.onMapDrag?.(position);
+    ({ nativeEvent: result }: { nativeEvent: DragResult }) => {
+      props.mapViewCallbacks?.onMapDrag?.(result);
     },
     [props.mapViewCallbacks]
   );
 
   const onMapDragEnd = useCallback(
-    ({ nativeEvent: position }: { nativeEvent: CameraPosition }) => {
-      props.mapViewCallbacks?.onMapDragEnd?.(position);
+    ({ nativeEvent: result }: { nativeEvent: DragResult }) => {
+      props.mapViewCallbacks?.onMapDragEnd?.(result);
     },
     [props.mapViewCallbacks]
   );

@@ -22,6 +22,7 @@ import Snackbar from 'react-native-snackbar';
 import {
   type CameraPosition,
   type Circle,
+  type DragResult,
   type LatLng,
   type MapViewCallbacks,
   type MapViewController,
@@ -117,11 +118,11 @@ const IntegrationTestsScreen = () => {
       onMapClick: (latLng: LatLng) => {
         console.log('Map 1, onMapClick:', latLng);
       },
-      onMapDrag: (position: CameraPosition) => {
-        console.log('Map 1, onMapDrag:', position);
+      onMapDrag: (result: DragResult) => {
+        console.log('Map 1, onMapDrag:', result);
       },
-      onMapDragEnd: (position: CameraPosition) => {
-        console.log('Map 1, onMapDragEnd:', position);
+      onMapDragEnd: (result: DragResult) => {
+        console.log('Map 1, onMapDragEnd:', result);
       },
     }),
     [mapViewController, onMapReady]

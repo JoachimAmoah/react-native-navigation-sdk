@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Google LLC
+ * Copyright 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,21 @@
  * limitations under the License.
  */
 
-export * from './mapView';
-export * from './markerView';
-export * from './types';
+#import "MarkerView.h"
+#import "MarkerViewManager.h"
+
+@implementation MarkerViewManager
+
+RCT_EXPORT_MODULE();
+
+RCT_EXPORT_VIEW_PROPERTY(visible, BOOL)
+
+- (UIView *)view
+{
+  MarkerView *markerView = [[MarkerView alloc] init];
+  markerView.delegate = self;
+  
+  return markerView;
+}
+
+@end

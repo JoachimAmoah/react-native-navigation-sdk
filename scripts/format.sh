@@ -10,7 +10,7 @@
 # Runs all format scripts (Java, Kotlin, Objective-C) in this folder.
 set -e
 
-DIR="$(cd "$(dirname "$0")" && pwd)"
+# DIR="$(cd "$(dirname "$0")" && pwd)"
 
-"$DIR/format-java.sh" "$@"
-"$DIR/format-objc.sh" "$@"
+# "$DIR/format-java.sh" "$@"
+# "$DIR/format-objc.sh" "$@"

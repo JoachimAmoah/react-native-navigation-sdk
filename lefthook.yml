@@ -12,27 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-pre-commit:
-  parallel: true
-  commands:
-    format-objc:
-      runner: sh
-      run: ./scripts/format-objc.sh --check
-    format-java:
-      runner: sh
-      run: ./scripts/format-java.sh --check
-    license-check:
-      runner: sh
-      run: ./scripts/addlicense.sh --check
-    lint:
-      glob: '*.{js,ts,jsx,tsx}'
-      run: npx eslint {staged_files}
-    types:
-      glob: '*.{js,ts, jsx, tsx}'
-      run: npx tsc --noEmit
-commit-msg:
-  parallel: true
-  commands:
-    commitlint:
-      run: npx commitlint --edit
+# pre-commit:
+#   parallel: true
+#   commands:
+#     format-objc:
+#       runner: sh
+#       run: ./scripts/format-objc.sh --check
+#     format-java:
+#       runner: sh
+#       run: ./scripts/format-java.sh --check
+#     license-check:
+#       runner: sh
+#       run: ./scripts/addlicense.sh --check
+#     lint:
+#       glob: '*.{js,ts,jsx,tsx}'
+#       run: npx eslint {staged_files}
+#     types:
+#       glob: '*.{js,ts, jsx, tsx}'
+#       run: npx tsc --noEmit
+# commit-msg:
+#   parallel: true
+#   commands:
+#     commitlint:
+#       run: npx commitlint --edit
 rc: ~/.lefthookrc

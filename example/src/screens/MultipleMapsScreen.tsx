@@ -46,6 +46,7 @@ import {
   useNavigation,
   MapView,
   type CameraPosition,
+  type DragResult,
 } from '@googlemaps/react-native-navigation-sdk';
 import MapsControls from '../controls/mapsControls';
 import NavigationControls from '../controls/navigationControls';
@@ -254,11 +255,11 @@ const MultipleMapsScreen = () => {
       onMapClick: (latLng: LatLng) => {
         console.log('Map 1, onMapClick:', latLng);
       },
-      onMapDrag: (position: CameraPosition) => {
-        console.log('Map 1, onMapDrag:', position);
+      onMapDrag: (result: DragResult) => {
+        console.log('Map 1, onMapDrag:', result);
       },
-      onMapDragEnd: (position: CameraPosition) => {
-        console.log('Map 1, onMapDragEnd:', position);
+      onMapDragEnd: (result: DragResult) => {
+        console.log('Map 1, onMapDragEnd:', result);
       },
     }),
     [mapViewController1, onMap1Ready]
@@ -288,11 +289,11 @@ const MultipleMapsScreen = () => {
       onMapClick: (latLng: LatLng) => {
         console.log('Map 2, onMapClick: ', latLng);
       },
-      onMapDrag: (position: CameraPosition) => {
+      onMapDrag: (position: DragResult) => {
         console.log('Map 2, onMapDrag:', position);
       },
-      onMapDragEnd: (position: CameraPosition) => {
-        console.log('Map 2, onMapDragEnd:', position);
+      onMapDragEnd: (result: DragResult) => {
+        console.log('Map 2, onMapDragEnd:', result);
       },
     }),
     [mapViewController2]

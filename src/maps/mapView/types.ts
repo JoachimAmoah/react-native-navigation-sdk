@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import type { ImageSource } from 'react-native';
 import type { LatLng, Location, Point, Bounds } from '../../shared/types';
 import type {
   CameraPosition,
@@ -53,6 +54,8 @@ export interface MarkerOptions {
   position: LatLng;
   /** Path to a local image asset that should be displayed in the marker instead of using the default marker pin. */
   imgPath?: string;
+  /** Image source to use as marker image. */
+  imageSrc?: ImageSource;
   /** A text string that's displayed in an info window when the user taps the marker. You can change this value at any time. */
   title?: string;
   /** Additional text that's displayed below the title. You can change this value at any time. */
@@ -67,6 +70,8 @@ export interface MarkerOptions {
   flat?: boolean;
   /** Indicates the visibility of the polygon. True by default. */
   visible?: boolean;
+    /** The ground anchor specifies the point in the icon image that is anchored to the marker’s position on the Earth’s surface. */
+  groundAnchor?: [number, number];
 }
 
 /**
@@ -158,6 +163,14 @@ export enum FragmentType {
 }
 
 /**
+ * Defines the results of a map drag event.
+ */
+export interface DragResult {
+  /** Camera position. */
+  cameraPosition: CameraPosition;
+}
+
+/**
  * `MapViewProps` interface provides a set of method definitions
  * for managing map events and debug information.
  */
@@ -205,15 +218,15 @@ export interface MapViewCallbacks {
 
   /**
    * Callback invoked repeated when map is being dragged.
-   * @param position The camera position at that instant.
+   * @param result The drag result at that instant.
    */
-  onMapDrag?(position: CameraPosition): void;
+  onMapDrag?(result: DragResult): void;
 
   /**
    * Callback invoked when map drag ends.
-   * @param position The camera position at that instant.
+   * @param result The drag result at that instant.
    */
-  onMapDragEnd?(latLng: CameraPosition): void;
+  onMapDragEnd?(result: DragResult): void;
 }
 
 export interface MapViewController {
