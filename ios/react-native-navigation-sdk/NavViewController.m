@@ -550,6 +550,14 @@
   completionBlock(result);
 }
 
+- (void)addGMSMarker:(GMSMarker *)marker visible:(BOOL)visible {
+  if (marker.userData != nil) {
+    [_markerList addObject:marker];
+  }
+
+  marker.map = visible ? _mapView : nil;
+}
+
 - (void)addMarker:(NSDictionary *)markerOptions result:(OnDictionaryResult)completionBlock {
   NSDictionary *position = [markerOptions objectForKey:@"position"];
   CLLocationCoordinate2D coordinatePosition =
@@ -570,8 +578,6 @@
 
   marker.userData = @[ [[NSUUID UUID] UUIDString] ];
 
-  marker.map = _mapView;
-
   if ([[markerOptions objectForKey:@"imgPath"] isKindOfClass:[NSString class]]) {
     NSString *imgPath = [markerOptions objectForKey:@"imgPath"];
     if (imgPath) {
@@ -581,11 +587,8 @@
   }
 
   BOOL visible = [[markerOptions objectForKey:@"visible"] boolValue];
-  if (!visible) {
-    marker.map = nil;  // Setting map to nil hides the marker
-  }
 
-  [_markerList addObject:marker];
+  [self addGMSMarker:marker visible:visible];
 
   completionBlock([ObjectTranslationUtil transformMarkerToDictionary:marker]);
 }

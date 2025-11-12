@@ -39,7 +39,6 @@ import {
   useNavigation,
   useNavigationAuto,
   type CustomNavigationAutoEvent,
-  type CameraPosition,
   type DragResult,
 } from '@googlemaps/react-native-navigation-sdk';
 import MapsControls from '../controls/mapsControls';

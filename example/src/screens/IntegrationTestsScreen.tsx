@@ -20,7 +20,6 @@ import { Button, Text, View } from 'react-native';
 import Snackbar from 'react-native-snackbar';
 
 import {
-  type CameraPosition,
   type Circle,
   type DragResult,
   type LatLng,

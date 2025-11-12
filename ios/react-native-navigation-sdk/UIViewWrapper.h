@@ -17,24 +17,9 @@
 #import <React/RCTBridge.h>
 #import <React/RCTComponent.h>
 #import <React/RCTViewManager.h>
-#import "NavViewController.h"
 
-@interface MarkerView : UIView
+@interface UIViewWrapper : UIView
 
-@property(nonatomic, assign) NavViewController *mapViewController;
-
-@property(nonatomic, assign) UIView *container;
-
-- (void)setVisible:(BOOL)visible;
-- (void)setPosition:(NSObject *)position;
-- (void)setGroundAnchor:(NSArray *)groundAnchor;
-- (void)setImgPath:(NSString *)imgPath;
-- (void)setTitle:(NSString *)title;
-- (void)setSnippet:(NSString *)snippet;
-- (void)setImgPath:(NSString *)imgPath;
-- (void)setAlpha:(float)alpha;
-- (void)setRotation:(float)rotation;
-- (void)setDraggable:(BOOL)draggable;
-- (void)setFlat:(BOOL)flat;
+@property(nonatomic, assign) UIView *content;
 
 @end

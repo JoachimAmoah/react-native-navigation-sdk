@@ -22,13 +22,14 @@ import {
   type ViewProps,
 } from 'react-native';
 import type { LatLng } from '.';
-import type { 
-  Circle, 
-  DragResult, 
-  GroundOverlay, 
+import type {
+  Circle,
+  DragResult,
+  GroundOverlay,
   Marker,
   Polygon,
-  Polyline } from '../maps';
+  Polyline,
+} from '../maps';
 import type {
   DirectEventHandler,
   Int32,

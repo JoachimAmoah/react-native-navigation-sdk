@@ -13,7 +13,9 @@
 // limitations under the License.
 
 #import "NavView.h"
+#import "MarkerView.h"
 #import "NavViewController.h"
+#import "UIViewWrapper.h"
 
 @interface NavView ()
 
@@ -53,7 +55,32 @@
 }
 
 - (void)insertReactSubview:(UIView *)subView atIndex:(NSInteger)atIndex {
-  NSLog(@"Subviewhere: %@", subView);
+  if (subView == nil || ![subView isKindOfClass:[MarkerView class]]) {
+    [super insertReactSubview:subView atIndex:atIndex];
+    return;
+  }
+
+  MarkerView *markerView = subView;
+  markerView.mapViewController = self.viewController;
+
+  UIViewWrapper *wrapper = [[UIViewWrapper alloc] init];
+  wrapper.content = markerView;
+
+  [super addSubview:markerView];
+
+  [super insertReactSubview:wrapper atIndex:atIndex];
+}
+
+- (void)removeReactSubview:(id<RCTComponent>)subView {
+  if (subView == nil || ![subView isKindOfClass:[UIViewWrapper class]]) {
+    [super removeReactSubview:subView];
+    return;
+  }
+
+  UIViewWrapper *wrapper = subView;
+  [wrapper.content removeFromSuperview];
+
+  [super removeReactSubview:subView];
 }
 
 - (NavViewController *)initializeViewControllerWithFragmentType:(FragmentType)fragmentType {

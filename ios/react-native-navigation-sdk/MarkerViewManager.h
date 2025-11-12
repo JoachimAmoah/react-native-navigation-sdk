@@ -15,6 +15,7 @@
  */
 
 #import <React/RCTViewManager.h>
+#import "MarkerView.h"
 
 @interface MarkerViewManager : RCTViewManager
 @end

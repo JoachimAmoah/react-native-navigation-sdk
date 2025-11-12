@@ -18,6 +18,7 @@
 #import <React/RCTConvert.h>
 #import <React/RCTUIManager.h>
 #import "CustomTypes.h"
+#import "MarkerView.h"
 #import "NavView.h"
 #import "NavViewController.h"
 #import "NavViewModule.h"

@@ -14,21 +14,28 @@
  * limitations under the License.
  */
 
-#import "MarkerView.h"
 #import "MarkerViewManager.h"
+#import <React/RCTConvert+CoreLocation.h>
+#import "MarkerView.h"
+#import "ObjectTranslationUtil.h"
 
 @implementation MarkerViewManager
 
 RCT_EXPORT_MODULE();
 
-RCT_EXPORT_VIEW_PROPERTY(visible, BOOL)
+RCT_EXPORT_VIEW_PROPERTY(visible, BOOL);
+RCT_EXPORT_VIEW_PROPERTY(imgPath, NSString);
+RCT_EXPORT_VIEW_PROPERTY(title, NSString);
+RCT_EXPORT_VIEW_PROPERTY(snippet, NSString);
+RCT_EXPORT_VIEW_PROPERTY(alpha, float);
+RCT_EXPORT_VIEW_PROPERTY(rotation, float);
+RCT_EXPORT_VIEW_PROPERTY(draggable, BOOL);
+RCT_EXPORT_VIEW_PROPERTY(flat, BOOL);
+RCT_EXPORT_VIEW_PROPERTY(position, NSDictionary);
+RCT_EXPORT_VIEW_PROPERTY(groundAnchor, NSArray);
 
-- (UIView *)view
-{
-  MarkerView *markerView = [[MarkerView alloc] init];
-  markerView.delegate = self;
-  
-  return markerView;
+- (UIView *)view {
+  return [[MarkerView alloc] init];
 }
 
 @end

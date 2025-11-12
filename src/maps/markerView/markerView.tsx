@@ -15,17 +15,22 @@
  */
 
 import React, { useRef } from 'react';
+import { type MarkerProps } from '..';
 import {
-  type MarkerOptions,
-} from '..';
-import { Platform, requireNativeComponent, type HostComponent } from 'react-native';
+  Platform,
+  requireNativeComponent,
+  type HostComponent,
+} from 'react-native';
 
-type NativeMarkerViewManagerComponentType = HostComponent<MarkerOptions>;
+type NativeMarkerViewManagerComponentType = HostComponent<MarkerProps>;
 
-const viewManagerName = Platform.OS === 'android' ? 'MarkerViewManager' : 'MarkerView';
-const MarkerViewManager = requireNativeComponent<MarkerOptions>(viewManagerName) as NativeMarkerViewManagerComponentType;
+const viewManagerName =
+  Platform.OS === 'android' ? 'MarkerViewManager' : 'MarkerView';
+const MarkerViewManager = requireNativeComponent<MarkerProps>(
+  viewManagerName
+) as NativeMarkerViewManagerComponentType;
 
-export const MarkerView = (props: MarkerOptions): React.JSX.Element => {
+export const MarkerView = (props: MarkerProps): React.JSX.Element => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const markerViewRef = useRef<any>(null);
 
@@ -39,12 +44,7 @@ export const MarkerView = (props: MarkerOptions): React.JSX.Element => {
     }
   };
 
-  return (
-    <MarkerViewManager
-      ref={onRefAssign}
-      {...props}
-    />
-  );
+  return <MarkerViewManager ref={onRefAssign} {...props} />;
 };
 
 export default MarkerView;

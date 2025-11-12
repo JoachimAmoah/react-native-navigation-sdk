@@ -70,6 +70,7 @@ typedef void (^OnArrayResult)(NSArray *_Nullable result);
 - (void)clearMapView;
 - (void)addGroundOverlay:(NSDictionary *)overlayOptions result:(OnDictionaryResult)completionBlock;
 - (void)addCircle:(NSDictionary *)circleOptions result:(OnDictionaryResult)completionBlock;
+- (void)addGMSMarker:(GMSMarker *)marker visible:(BOOL)visible;
 - (void)addMarker:(NSDictionary *)markerOptions result:(OnDictionaryResult)completionBlock;
 - (void)addPolygon:(NSDictionary *)polygonOptions result:(OnDictionaryResult)completionBlock;
 - (void)addPolyline:(NSDictionary *)options result:(OnDictionaryResult)completionBlock;
