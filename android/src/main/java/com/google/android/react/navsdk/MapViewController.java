@@ -20,6 +20,8 @@ import androidx.core.util.Supplier;
 import com.facebook.react.bridge.UiThreadUtil;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.AdvancedMarker;
+import com.google.android.gms.maps.model.AdvancedMarkerOptions;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -45,6 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
+import javax.annotation.Nullable;
 
 public class MapViewController {
   private GoogleMap mGoogleMap;
@@ -82,6 +85,10 @@ public class MapViewController {
     mGoogleMap.setOnInfoWindowClickListener(
         marker -> mNavigationViewCallback.onMarkerInfoWindowTapped(marker));
     mGoogleMap.setOnMapClickListener(latLng -> mNavigationViewCallback.onMapClick(latLng));
+    mGoogleMap.setOnCameraMoveListener(
+        () -> mNavigationViewCallback.onMapDrag(mGoogleMap.getCameraPosition()));
+    mGoogleMap.setOnCameraIdleListener(
+        () -> mNavigationViewCallback.onMapDragEnd(mGoogleMap.getCameraPosition()));
   }
 
   public GoogleMap getGoogleMap() {
@@ -125,6 +132,20 @@ public class MapViewController {
     circleList.add(circle);
 
     return circle;
+  }
+
+  public AdvancedMarker addMarkerView(
+      AdvancedMarkerOptions markerOptions, @Nullable List<Marker> markerList) {
+    if (mGoogleMap == null) {
+      return null;
+    }
+
+    AdvancedMarker marker = (AdvancedMarker) mGoogleMap.addMarker(markerOptions);
+    if (markerList != null) {
+      markerList.add(marker);
+    }
+
+    return marker;
   }
 
   public Marker addMarker(Map<String, Object> optionsMap) {

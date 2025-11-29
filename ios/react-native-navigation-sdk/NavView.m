@@ -66,8 +66,11 @@
   UIViewWrapper *wrapper = [[UIViewWrapper alloc] init];
   wrapper.content = markerView;
 
-  [super addSubview:markerView];
+  // Add the marker to the view hierarchy in order to trigger MarkerView.layoutSubviews.
+  [super insertSubview:markerView atIndex:atIndex];
 
+  // Replace MarkerView with the invisible wrapper. Inside the wrapper is the marker UIView
+  // that'll be set to GMSMarker.iconView.
   [super insertReactSubview:wrapper atIndex:atIndex];
 }
 
@@ -140,13 +143,13 @@
 
 - (void)handleMapDrag:(GMSCameraPosition *)cameraPosition {
   if (self.onMapDrag) {
-    self.onMapDrag(cameraPosition);
+    self.onMapDrag(@{@"cameraPosition" : cameraPosition});
   }
 }
 
 - (void)handleMapDragEnd:(GMSCameraPosition *)cameraPosition {
   if (self.onMapDragEnd) {
-    self.onMapDragEnd(cameraPosition);
+    self.onMapDragEnd(@{@"cameraPosition" : cameraPosition});
   }
 }
 

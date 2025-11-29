@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #import "MarkerView.h"
+#import <React/RCTConvert.h>
 #import "UIViewWrapper.h"
 
 @import GoogleNavigation;
@@ -28,10 +29,21 @@
   self = [super init];
   if (self) {
     _marker = [GMSMarker markerWithPosition:CLLocationCoordinate2DMake(0, 0)];
+    _marker.userData = @[ [[NSUUID UUID] UUIDString] ];
     _marker.tracksViewChanges = true;
   }
 
   return self;
+}
+
++ (NSMutableDictionary *)markers {
+  static MarkerView *sharedInstance = nil;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    sharedInstance = [[NSMutableDictionary alloc] init];
+  });
+
+  return sharedInstance;
 }
 
 - (void)insertReactSubview:(UIView *)subView atIndex:(NSInteger)atIndex {
@@ -59,14 +71,12 @@
     return;
   }
 
+  [[MarkerView markers] removeObjectForKey:_marker.userData];
+
   _marker.map = nil;
 }
 
 - (void)layoutSubviews {
-  if (!_iconView) {
-    _iconView = [[UIView alloc] init];
-  }
-
   float width = 0;
   float height = 0;
 
@@ -88,8 +98,14 @@
     _marker.iconView = _iconView;
   }
 
-  [_mapViewController addGMSMarker:_marker visible:_visible];
+  [_mapViewController addMarkerView:_marker visible:_visible];
   _mapView = _marker.map;
+
+  [[MarkerView markers] setObject:self forKey:_marker.userData];
+}
+
++ (MarkerView *)getMarkerView:(NSString *)markerViewId {
+  return [[MarkerView markers] objectForKey:markerViewId];
 }
 
 - (void)setVisible:(BOOL)visible {
@@ -113,6 +129,29 @@
 - (void)setImgPath:(NSString *)imgPath {
   UIImage *icon = [UIImage imageNamed:imgPath];
   _marker.icon = icon;
+}
+
+- (void)setImageSrc:(NSDictionary *)imageSrc {
+  if (imageSrc == nil) {
+    return;
+  }
+
+  NSURL *imageURL = [RCTConvert NSURL:imageSrc[@"uri"]];
+  NSURLSession *session = [NSURLSession sharedSession];
+  NSURLSessionDataTask *dataTask =
+      [session dataTaskWithURL:imageURL
+             completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+               if (!error && data) {
+                 CGFloat scale = [UIScreen mainScreen].scale;
+                 UIImage *image = [UIImage imageWithData:data scale:scale];
+                 dispatch_async(dispatch_get_main_queue(), ^{
+                   _marker.icon = image;
+                 });
+               } else {
+                 NSLog(@"Error fetching image: %@", error.localizedDescription);
+               }
+             }];
+  [dataTask resume];
 }
 
 - (void)setTitle:(NSString *)title {
@@ -140,6 +179,10 @@
 
 - (void)setFlat:(BOOL)flat {
   _marker.flat = flat;
+}
+
+- (void)setZIndex:(float)zIndex {
+  _marker.zIndex = zIndex;
 }
 
 @end

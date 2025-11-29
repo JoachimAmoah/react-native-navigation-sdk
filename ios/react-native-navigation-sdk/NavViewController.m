@@ -15,7 +15,10 @@
  */
 
 #import "NavViewController.h"
+#import <React/RCTConvert.h>
 #import <React/RCTLog.h>
+#import <UIKit/UIKit.h>
+#import "MarkerView.h"
 #import "NavModule.h"
 #import "ObjectTranslationUtil.h"
 #import "UIColor+Util.h"
@@ -83,6 +86,12 @@
 }
 
 - (BOOL)mapView:(GMSMapView *)mapView didTapMarker:(GMSMarker *)marker {
+  MarkerView *markerView = [MarkerView getMarkerView:marker.userData];
+  if (markerView != nil) {
+    markerView.onPress(@{});
+    return FALSE;
+  }
+
   [self.callbacks handleMarkerClick:marker];
   return FALSE;
 }
@@ -550,11 +559,7 @@
   completionBlock(result);
 }
 
-- (void)addGMSMarker:(GMSMarker *)marker visible:(BOOL)visible {
-  if (marker.userData != nil) {
-    [_markerList addObject:marker];
-  }
-
+- (void)addMarkerView:(GMSMarker *)marker visible:(BOOL)visible {
   marker.map = visible ? _mapView : nil;
 }
 
@@ -584,11 +589,16 @@
       UIImage *icon = [UIImage imageNamed:imgPath];  // Assuming local asset
       marker.icon = icon;
     }
+  } else if ([markerOptions objectForKey:@"imageSrc"]) {
+    NSDictionary *imageSrc = [markerOptions objectForKey:@"imageSrc"];
+    UIImage *icon = [RCTConvert UIImage:imageSrc];
+    marker.icon = icon;
   }
 
   BOOL visible = [[markerOptions objectForKey:@"visible"] boolValue];
+  marker.map = visible ? _mapView : nil;
 
-  [self addGMSMarker:marker visible:visible];
+  [_markerList addObject:marker];
 
   completionBlock([ObjectTranslationUtil transformMarkerToDictionary:marker]);
 }

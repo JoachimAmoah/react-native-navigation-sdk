@@ -14,6 +14,7 @@
 package com.google.android.react.navsdk;
 
 import android.content.Context;
+import android.view.View;
 import android.widget.FrameLayout;
 import androidx.annotation.Nullable;
 import com.google.android.libraries.navigation.StylingOptions;
@@ -22,9 +23,30 @@ public class NavViewLayout extends FrameLayout {
   private CustomTypes.FragmentType fragmentType;
   private StylingOptions stylingOptions;
   private boolean isFragmentCreated = false;
+  private MapViewController mapViewController;
 
   public NavViewLayout(Context context) {
     super(context);
+  }
+
+  public void initializeMapViewController(MapViewController mapViewController) {
+    this.mapViewController = mapViewController;
+  }
+
+  public void drawOverlays() {
+    if (this.mapViewController == null) {
+      return;
+    }
+
+    int childCount = this.getChildCount();
+    for (int i = 0; i < childCount; i++) {
+      View child = this.getChildAt(i);
+      if (!(child instanceof MarkerView)) {
+        continue;
+      }
+
+      ((MarkerView) child).createMarker(this.mapViewController);
+    }
   }
 
   public void setFragmentType(CustomTypes.FragmentType type) {
@@ -51,5 +73,42 @@ public class NavViewLayout extends FrameLayout {
 
   public void setFragmentCreated(boolean created) {
     this.isFragmentCreated = created;
+  }
+
+  @Override
+  public void addView(View child, int index) {
+    if (!(child instanceof MarkerView)) {
+      super.addView(child, index);
+      return;
+    }
+
+    MarkerView markerView = (MarkerView) child;
+    if (this.mapViewController != null) {
+      markerView.createMarker(this.mapViewController);
+    }
+
+    // Add the marker to the view hierarchy.
+    super.addView(markerView, index);
+
+    // Replace MarkerView with the invisible wrapper. Inside the wrapper is the marker View
+    // that'll be set to GMSMarker.iconView.
+    ViewWrapper wrapper = new ViewWrapper(getContext());
+    wrapper.content = child;
+    super.addView(wrapper, index);
+  }
+
+  @Override
+  public void onViewRemoved(View child) {
+    if (!(child instanceof ViewWrapper)) {
+      super.onViewRemoved(child);
+      return;
+    }
+
+    ViewWrapper wrapper = (ViewWrapper) child;
+    if (wrapper.content instanceof MarkerView) {
+      ((MarkerView) wrapper.content).detach();
+    }
+
+    super.onViewRemoved(wrapper);
   }
 }

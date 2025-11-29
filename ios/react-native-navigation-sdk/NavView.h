@@ -17,6 +17,7 @@
 #import <React/RCTBridge.h>
 #import <React/RCTComponent.h>
 #import <React/RCTViewManager.h>
+#import <UIKit/UIKit.h>
 #import "CustomTypes.h"
 #import "INavigationViewCallback.h"
 

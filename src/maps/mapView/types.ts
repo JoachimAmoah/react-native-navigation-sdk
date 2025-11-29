@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import type { ImageURISource } from 'react-native';
 import type { LatLng, Location, Point, Bounds } from '../../shared/types';
 import type {
   CameraPosition,
@@ -53,6 +54,8 @@ export interface MarkerOptions {
   position: LatLng;
   /** Path to a local image asset that should be displayed in the marker instead of using the default marker pin. */
   imgPath?: string;
+  /** Image source to use as marker image. */
+  imageSrc?: ImageURISource;
   /** A text string that's displayed in an info window when the user taps the marker. You can change this value at any time. */
   title?: string;
   /** Additional text that's displayed below the title. You can change this value at any time. */
@@ -61,6 +64,8 @@ export interface MarkerOptions {
   alpha?: number;
   /** The rotation of the marker in degrees clockwise about the marker's anchor point. The axis of rotation is perpendicular to the marker. A rotation of 0 corresponds to the default position of the marker. When the marker is flat on the map, the default position is North aligned and the rotation is such that the marker always remains flat on the map. When the marker is a billboard, the default position is pointing up and the rotation is such that the marker is always facing the camera. The default value is 0. */
   rotation?: number;
+  /** Sets the z-index of the marker. */
+  zIndex?: number;
   /** Indicates whether this marker is draggable. False by default. */
   draggable?: boolean;
   /** Indicates whether this marker should be flat against the map true or a billboard facing the camera false. */

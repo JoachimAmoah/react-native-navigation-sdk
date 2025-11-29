@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useRef } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { type MarkerProps } from '..';
 import {
   Platform,
@@ -24,11 +24,8 @@ import {
 
 type NativeMarkerViewManagerComponentType = HostComponent<MarkerProps>;
 
-const viewManagerName =
-  Platform.OS === 'android' ? 'MarkerViewManager' : 'MarkerView';
-const MarkerViewManager = requireNativeComponent<MarkerProps>(
-  viewManagerName
-) as NativeMarkerViewManagerComponentType;
+
+const MarkerViewManager = requireNativeComponent<MarkerProps>('MarkerView') as NativeMarkerViewManagerComponentType;
 
 export const MarkerView = (props: MarkerProps): React.JSX.Element => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -44,7 +41,13 @@ export const MarkerView = (props: MarkerProps): React.JSX.Element => {
     }
   };
 
-  return <MarkerViewManager ref={onRefAssign} {...props} />;
+  const sanitizedProps = useMemo(() => (Platform.OS === 'android' ? {
+    ...props,
+    positionAndroid: props.position,
+    position: undefined!,
+  } : props), [props]);
+
+  return <MarkerViewManager ref={onRefAssign} {...sanitizedProps} />;
 };
 
 export default MarkerView;

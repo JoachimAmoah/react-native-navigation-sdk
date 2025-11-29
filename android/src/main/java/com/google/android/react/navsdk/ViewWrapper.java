@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Google LLC
+ * Copyright 2025 Google LLC
  *
  * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
@@ -13,18 +13,13 @@
  */
 package com.google.android.react.navsdk;
 
-public class Constants {
-  public static final String LAT_FIELD_KEY = "lat";
-  public static final String LNG_FIELD_KEY = "lng";
+import android.content.Context;
+import android.view.View;
 
-  public static final String URI_KEY = "uri";
+public class ViewWrapper extends View {
+  View content;
 
-  public static final String X_KEY = "x";
-  public static final String Y_KEY = "y";
-
-  public static final String CAMERA_POSITION_KEY = "cameraPosition";
-  public static final String TARGET_KEY = "target";
-  public static final String BEARING_KEY = "bearing";
-  public static final String TILT_KEY = "tilt";
-  public static final String ZOOM_KEY = "zoom";
+  public ViewWrapper(Context context) {
+    super(context);
+  }
 }

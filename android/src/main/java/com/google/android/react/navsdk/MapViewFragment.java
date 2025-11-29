@@ -27,6 +27,7 @@ import com.facebook.react.uimanager.events.EventDispatcher;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.GroundOverlay;
 import com.google.android.gms.maps.model.LatLng;
@@ -81,6 +82,10 @@ public class MapViewFragment extends SupportMapFragment
             // Setup map listeners with the provided callback
             mMapViewController.setupMapListeners(MapViewFragment.this);
 
+            NavViewLayout navViewLayout = view.getRootView().findViewById(viewTag);
+            navViewLayout.initializeMapViewController(mMapViewController);
+            navViewLayout.drawOverlays();
+
             emitEvent("onMapReady", null);
           }
         });
@@ -93,6 +98,12 @@ public class MapViewFragment extends SupportMapFragment
 
   @Override
   public void onMarkerClick(Marker marker) {
+    MarkerView markerView = MarkerView.getMarkerView(marker);
+    if (markerView != null) {
+      markerView.onPress();
+      return;
+    }
+
     emitEvent("onMarkerClick", ObjectTranslationUtil.getMapFromMarker(marker));
   }
 
@@ -124,6 +135,24 @@ public class MapViewFragment extends SupportMapFragment
   @Override
   public void onMapClick(LatLng latLng) {
     emitEvent("onMapClick", ObjectTranslationUtil.getMapFromLatLng(latLng));
+  }
+
+  @Override
+  public void onMapDrag(CameraPosition cameraPosition) {
+    WritableMap map = Arguments.createMap();
+    map.putMap(
+        Constants.CAMERA_POSITION_KEY,
+        ObjectTranslationUtil.getMapFromCameraPosition(cameraPosition));
+    emitEvent("onMapDrag", map);
+  }
+
+  @Override
+  public void onMapDragEnd(CameraPosition cameraPosition) {
+    WritableMap map = Arguments.createMap();
+    map.putMap(
+        Constants.CAMERA_POSITION_KEY,
+        ObjectTranslationUtil.getMapFromCameraPosition(cameraPosition));
+    emitEvent("onMapDragEnd", map);
   }
 
   public MapViewController getMapController() {

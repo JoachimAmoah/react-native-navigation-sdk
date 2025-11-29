@@ -17,18 +17,22 @@
 #import <React/RCTBridge.h>
 #import <React/RCTComponent.h>
 #import <React/RCTViewManager.h>
+#import <UIKit/UIKit.h>
 #import "NavViewController.h"
 
 @interface MarkerView : UIView
 
 @property(nonatomic, assign) NavViewController *mapViewController;
-
 @property(nonatomic, assign) UIView *container;
 
+@property(nonatomic, copy) RCTBubblingEventBlock onPress;
+
++ (MarkerView *)getMarkerView:(NSString *)markerViewId;
 - (void)setVisible:(BOOL)visible;
 - (void)setPosition:(NSObject *)position;
 - (void)setGroundAnchor:(NSArray *)groundAnchor;
 - (void)setImgPath:(NSString *)imgPath;
+- (void)setImageSrc:(NSDictionary *)imageSrc;
 - (void)setTitle:(NSString *)title;
 - (void)setSnippet:(NSString *)snippet;
 - (void)setImgPath:(NSString *)imgPath;
@@ -36,5 +40,6 @@
 - (void)setRotation:(float)rotation;
 - (void)setDraggable:(BOOL)draggable;
 - (void)setFlat:(BOOL)flat;
+- (void)setZIndex:(float)zIndex;
 
 @end
