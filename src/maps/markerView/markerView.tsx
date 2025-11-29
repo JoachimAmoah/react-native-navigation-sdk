@@ -24,8 +24,9 @@ import {
 
 type NativeMarkerViewManagerComponentType = HostComponent<MarkerProps>;
 
-
-const MarkerViewManager = requireNativeComponent<MarkerProps>('MarkerView') as NativeMarkerViewManagerComponentType;
+const MarkerViewManager = requireNativeComponent<MarkerProps>(
+  'MarkerView'
+) as NativeMarkerViewManagerComponentType;
 
 export const MarkerView = (props: MarkerProps): React.JSX.Element => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -41,11 +42,17 @@ export const MarkerView = (props: MarkerProps): React.JSX.Element => {
     }
   };
 
-  const sanitizedProps = useMemo(() => (Platform.OS === 'android' ? {
-    ...props,
-    positionAndroid: props.position,
-    position: undefined!,
-  } : props), [props]);
+  const sanitizedProps = useMemo(
+    () =>
+      Platform.OS === 'android'
+        ? {
+            ...props,
+            positionAndroid: props.position,
+            position: undefined!,
+          }
+        : props,
+    [props]
+  );
 
   return <MarkerViewManager ref={onRefAssign} {...sanitizedProps} />;
 };

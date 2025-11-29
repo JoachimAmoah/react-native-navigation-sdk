@@ -18,9 +18,10 @@ import type { PropsWithChildren } from 'react';
 import type { MarkerOptions } from '../mapView';
 import type { LatLng } from '../../shared';
 
-export type MarkerProps = MarkerOptions & PropsWithChildren & {
-	/** On Android, setting MarkerOptions.position throws an error so we move the value into MarkerOptions.positionAndroid and undefine MarkerOptions.position. */
-	positionAndroid?: LatLng;
-	/** Triggered when map marker is pressed. */
-	onPress?: () => void;
-};
+export type MarkerProps = MarkerOptions &
+  PropsWithChildren & {
+    /** On Android, setting MarkerOptions.position throws an error so we move the value into MarkerOptions.positionAndroid and undefine MarkerOptions.position. */
+    positionAndroid?: LatLng;
+    /** Triggered when map marker is pressed. */
+    onPress?: () => void;
+  };
