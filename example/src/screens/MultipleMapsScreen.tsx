@@ -20,8 +20,9 @@ import React, {
   useMemo,
   useCallback,
   useRef,
+  useReducer,
 } from 'react';
-import { Button, View } from 'react-native';
+import { Button, Text, View } from 'react-native';
 import PagerView, {
   type PagerViewOnPageSelectedEvent,
 } from 'react-native-pager-view';
@@ -46,6 +47,8 @@ import {
   useNavigation,
   MapView,
   type DragResult,
+  type MarkerOptions,
+  MarkerView,
 } from '@googlemaps/react-native-navigation-sdk';
 import MapsControls from '../controls/mapsControls';
 import NavigationControls from '../controls/navigationControls';
@@ -64,6 +67,19 @@ enum OverlayType {
   MapControls1 = 'MapControls1',
   MapControls2 = 'MapControls2',
 }
+
+const CustomMarkerView: React.FC<MarkerOptions> = markerOptions => {
+  const [value, incrementValue] = useReducer(prev => prev + 1, 0);
+
+  return (
+    <MarkerView visible {...markerOptions} onPress={() => incrementValue()}>
+      <View style={styles.markerView}>
+        <Text style={styles.markerViewText}>{value}</Text>
+        <Text style={styles.markerViewText}>{'increment!'}</Text>
+      </View>
+    </MarkerView>
+  );
+};
 
 const MultipleMapsScreen = () => {
   const [mapsVisible, setMapsVisible] = useState(true);
@@ -314,6 +330,8 @@ const MultipleMapsScreen = () => {
     pagerRef.current?.setPage(pageIndex);
   }, []);
 
+  const [markers, setMarkers] = useState<MarkerOptions[]>([]);
+
   return arePermissionsApproved ? (
     <View style={styles.container}>
       <Button
@@ -383,7 +401,11 @@ const MultipleMapsScreen = () => {
                 style={{ flex: 1 }}
                 mapViewCallbacks={mapViewCallbacks2}
                 onMapViewControllerCreated={setMapViewController2}
-              />
+              >
+                {markers?.map((markerOptions, idx) => (
+                  <CustomMarkerView key={idx} {...markerOptions} />
+                ))}
+              </MapView>
               {currentPage === 1 && (
                 <View style={styles.controlButtons}>
                   <Button title="Map 2" onPress={onShowMapsControlsClick2} />
@@ -423,7 +445,11 @@ const MultipleMapsScreen = () => {
               visible={overlayType === OverlayType.MapControls2}
               closeOverlay={closeOverlay}
             >
-              <MapsControls mapViewController={mapViewController2} />
+              <MapsControls
+                mapViewController={mapViewController2}
+                addMarkerView={marker => setMarkers([...markers, marker])}
+                clearMarkerViews={() => setMarkers([])}
+              />
             </OverlayModal>
           )}
         </React.Fragment>

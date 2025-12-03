@@ -87,7 +87,7 @@
 
 - (BOOL)mapView:(GMSMapView *)mapView didTapMarker:(GMSMarker *)marker {
   MarkerView *markerView = [MarkerView getMarkerView:marker.userData];
-  if (markerView != nil) {
+  if (markerView != nil && markerView.onPress != nil) {
     markerView.onPress(@{});
     return FALSE;
   }

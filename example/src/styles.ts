@@ -35,6 +35,13 @@ const styles = StyleSheet.create({
     padding: 10,
     flexGrow: 1,
   },
+  markerView: {
+    alignItems: 'center',
+  },
+  markerViewText: {
+    fontSize: 30,
+    fontWeight: 'bold',
+  },
   rowContainer: {
     margin: 5,
     marginLeft: 20,

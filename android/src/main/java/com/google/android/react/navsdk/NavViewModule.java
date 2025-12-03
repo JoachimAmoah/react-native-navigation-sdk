@@ -177,12 +177,15 @@ public class NavViewModule extends ReactContextBaseJavaModule {
           }
 
           ReadableMap paddingMap = boundsOptions.getMap("padding");
-          double density = getReactApplicationContext().getResources().getDisplayMetrics().density;
-          int left = (int) (paddingMap.getInt("left") * density);
-          int top = (int) (paddingMap.getInt("top") * density);
-          int right = (int) (paddingMap.getInt("right") * density);
-          int bottom = (int) (paddingMap.getInt("bottom") * density);
-          mNavViewManager.getGoogleMap(viewId).setPadding(left, top, right, bottom);
+          if (paddingMap != null) {
+            double density =
+                getReactApplicationContext().getResources().getDisplayMetrics().density;
+            int left = (int) (paddingMap.getInt("left") * density);
+            int top = (int) (paddingMap.getInt("top") * density);
+            int right = (int) (paddingMap.getInt("right") * density);
+            int bottom = (int) (paddingMap.getInt("bottom") * density);
+            mNavViewManager.getGoogleMap(viewId).setPadding(left, top, right, bottom);
+          }
 
           CameraUpdate cameraUpdate =
               CameraUpdateFactory.newLatLngBounds(new LatLngBounds(southWest, northEast), 0);

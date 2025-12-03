@@ -27,15 +27,22 @@ import {
   type Circle,
   type Polyline,
   type Polygon,
+  type MarkerOptions,
 } from '@googlemaps/react-native-navigation-sdk';
 
 export interface MapControlsProps {
   readonly mapViewController: MapViewController;
+  addMarkerView?: (_: MarkerOptions) => void;
+  clearMarkerViews?: () => void;
 }
 
 export const defaultZoom: number = 15;
 
-const MapsControls: React.FC<MapControlsProps> = ({ mapViewController }) => {
+const MapsControls: React.FC<MapControlsProps> = ({
+  mapViewController,
+  addMarkerView,
+  clearMarkerViews,
+}) => {
   const mapTypeOptions = ['None', 'Normal', 'Satellite', 'Terrain', 'Hybrid'];
   const [zoom, setZoom] = useState<number | null>(null);
   const [enableLocationMarker, setEnableLocationMarker] = useState(true);
@@ -212,6 +219,36 @@ const MapsControls: React.FC<MapControlsProps> = ({ mapViewController }) => {
     setCustomPaddingEnabled(!customPaddingEnabled);
   };
 
+  const coordinateForPoint = async () => {
+    const cameraPosition = await mapViewController.getCameraPosition();
+    const point = await mapViewController.pointForCoordinate(
+      cameraPosition.target
+    );
+    const coordinate = await mapViewController.coordinateForPoint(point);
+    console.log({ point, coordinate });
+  };
+
+  const pointForCoordinate = async () => {
+    const { target: coordinate } = await mapViewController.getCameraPosition();
+    const point = await mapViewController.pointForCoordinate(coordinate);
+    console.log({ point, coordinate });
+  };
+
+  const fitBounds = async () => {
+    const bounds = await mapViewController.getBounds();
+    bounds.northEast.lat -= 1;
+    bounds.northEast.lng -= 1;
+    bounds.southWest.lat += 1;
+    bounds.southWest.lng += 1;
+
+    await mapViewController.fitBounds({ bounds });
+  };
+
+  const getBounds = async () => {
+    const bounds = await mapViewController.getBounds();
+    console.log(bounds);
+  };
+
   return (
     <View>
       <TextInput
@@ -245,6 +282,18 @@ const MapsControls: React.FC<MapControlsProps> = ({ mapViewController }) => {
       />
       <Button title="Add marker" onPress={() => addMarker()} />
       <Button title="Add custom marker" onPress={() => addCustomMarker()} />
+      <Button
+        title="Add marker view"
+        onPress={async () => {
+          const cameraPosition = await mapViewController.getCameraPosition();
+          addMarkerView?.({
+            position: cameraPosition.target,
+            visible: true,
+            rotation: 45,
+          });
+        }}
+      />
+      <Button title="Clear marker views" onPress={clearMarkerViews} />
       <Button title="Add circle" onPress={addCircle} />
       <Button title="Add polyline" onPress={addPolyline} />
       <Button title="Add polygon" onPress={addPolygon} />
@@ -256,6 +305,10 @@ const MapsControls: React.FC<MapControlsProps> = ({ mapViewController }) => {
         onPress={getIsMyLocationEnabled}
       />
       <Button title="Get camera position" onPress={getCameraPositionClicked} />
+      <Button title="Coordinate for point" onPress={coordinateForPoint} />
+      <Button title="Point for coordinate" onPress={pointForCoordinate} />
+      <Button title="Get bounds" onPress={getBounds} />
+      <Button title="Fit bounds (Shrink edges by 1°)" onPress={fitBounds} />
       <View style={styles.rowContainer}>
         <Text>Location marker</Text>
         <Button
