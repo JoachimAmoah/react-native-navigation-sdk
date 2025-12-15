@@ -16,6 +16,7 @@
 
 #import "NavAutoModule.h"
 #import "NavAutoEventDispatcher.h"
+#import "NavViewController.h"
 
 @implementation NavAutoModule
 
@@ -143,6 +144,68 @@ RCT_EXPORT_METHOD(addCircle
                                 result:^(NSDictionary *result) {
                                   resolve(result);
                                 }];
+    } else {
+      reject(@"no_view_controller", @"No viewController found", nil);
+    }
+  });
+}
+
+RCT_EXPORT_METHOD(coordinateForPoint
+                  : (NSDictionary *)point resolver
+                  : (RCTPromiseResolveBlock)resolve rejecter
+                  : (RCTPromiseRejectBlock)reject) {
+  dispatch_async(dispatch_get_main_queue(), ^{
+    if (self->_viewController) {
+      [self->_viewController coordinateForPoint:point
+                                         result:^(NSDictionary *result) {
+                                           resolve(result);
+                                         }];
+    } else {
+      reject(@"no_view_controller", @"No viewController found", nil);
+    }
+  });
+}
+
+RCT_EXPORT_METHOD(pointForCoordinate
+                  : (NSDictionary *)coordinate resolver
+                  : (RCTPromiseResolveBlock)resolve rejecter
+                  : (RCTPromiseRejectBlock)reject) {
+  dispatch_async(dispatch_get_main_queue(), ^{
+    if (self->_viewController) {
+      [self->_viewController pointForCoordinate:coordinate
+                                         result:^(NSDictionary *result) {
+                                           resolve(result);
+                                         }];
+    } else {
+      reject(@"no_view_controller", @"No viewController found", nil);
+    }
+  });
+}
+
+RCT_EXPORT_METHOD(fitBounds
+                  : (NSDictionary *)boundsOptions resolver
+                  : (RCTPromiseResolveBlock)resolve rejecter
+                  : (RCTPromiseRejectBlock)reject) {
+  dispatch_async(dispatch_get_main_queue(), ^{
+    if (self->_viewController) {
+      [self->_viewController fitBounds:boundsOptions
+                                result:^(NSDictionary *result) {
+                                  resolve(result);
+                                }];
+    } else {
+      reject(@"no_view_controller", @"No viewController found", nil);
+    }
+  });
+}
+
+RCT_EXPORT_METHOD(getBounds
+                  : (RCTPromiseResolveBlock)resolve rejecter
+                  : (RCTPromiseRejectBlock)reject) {
+  dispatch_async(dispatch_get_main_queue(), ^{
+    if (self->_viewController) {
+      [self->_viewController getBounds:^(NSDictionary *result) {
+        resolve(result);
+      }];
     } else {
       reject(@"no_view_controller", @"No viewController found", nil);
     }

@@ -16,6 +16,7 @@ package com.google.android.react.navsdk;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.facebook.react.bridge.Arguments;
@@ -25,17 +26,16 @@ import com.facebook.react.uimanager.UIManagerHelper;
 import com.facebook.react.uimanager.events.Event;
 import com.facebook.react.uimanager.events.EventDispatcher;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.GroundOverlay;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapColorScheme;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.Polyline;
-import com.google.android.libraries.navigation.StylingOptions;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A fragment that displays a view with a Google Map using MapFragment. This fragment's lifecycle is
@@ -45,25 +45,36 @@ import java.util.List;
 public class MapViewFragment extends SupportMapFragment
     implements IMapViewFragment, INavigationViewCallback {
   private static final String TAG = "MapViewFragment";
-  private GoogleMap mGoogleMap;
-  private MapViewController mMapViewController;
-  private StylingOptions mStylingOptions;
-
-  private List<Marker> markerList = new ArrayList<>();
-  private List<Polyline> polylineList = new ArrayList<>();
-  private List<Polygon> polygonList = new ArrayList<>();
-  private List<GroundOverlay> groundOverlayList = new ArrayList<>();
-  private List<Circle> circleList = new ArrayList<>();
   private int viewTag; // React native view tag.
   private ReactApplicationContext reactContext;
+  private GoogleMap mGoogleMap;
+  private MapViewController mMapViewController;
+  private @MapColorScheme int mapColorScheme = MapColorScheme.FOLLOW_SYSTEM;
 
-  public MapViewFragment(ReactApplicationContext reactContext, int viewTag) {
-    this.reactContext = reactContext;
-    this.viewTag = viewTag;
+  public static MapViewFragment newInstance(
+      ReactApplicationContext reactContext, int viewTag, @NonNull GoogleMapOptions mapOptions) {
+    MapViewFragment fragment = new MapViewFragment();
+    Bundle args = new Bundle();
+    args.putParcelable("MapOptions", mapOptions);
+
+    fragment.setArguments(args);
+    fragment.reactContext = reactContext;
+    fragment.viewTag = viewTag;
+
+    return fragment;
   }
-  ;
 
-  private String style = "";
+  private void drawOverlays(ViewGroup viewGroup, MapViewController mapViewController) {
+    int childCount = viewGroup.getChildCount();
+    for (int i = 0; i < childCount; i++) {
+      View child = viewGroup.getChildAt(i);
+      if (!(child instanceof MarkerView)) {
+        continue;
+      }
+
+      ((MarkerView) child).createMarker(mapViewController);
+    }
+  }
 
   @SuppressLint("MissingPermission")
   @Override
@@ -71,17 +82,23 @@ public class MapViewFragment extends SupportMapFragment
     super.onViewCreated(view, savedInstanceState);
 
     getMapAsync(
-        new OnMapReadyCallback() {
-          public void onMapReady(GoogleMap googleMap) {
-            mGoogleMap = googleMap;
+        googleMap -> {
+          mGoogleMap = googleMap;
 
-            mMapViewController = new MapViewController();
-            mMapViewController.initialize(googleMap, () -> requireActivity());
+          mMapViewController = new MapViewController();
+          mMapViewController.initialize(googleMap, this::requireActivity);
 
-            // Setup map listeners with the provided callback
-            mMapViewController.setupMapListeners(MapViewFragment.this);
+          // Setup map listeners with the provided callback
+          mMapViewController.setupMapListeners(MapViewFragment.this);
+          applyMapColorSchemeToMap();
 
-            emitEvent("onMapReady", null);
+          emitEvent("onMapReady", null);
+
+          // Request layout to ensure fragment is properly sized
+          ViewGroup fragmentView = (ViewGroup) getView();
+          if (fragmentView != null) {
+            fragmentView.requestLayout();
+            drawOverlays(fragmentView, mMapViewController);
           }
         });
   }
@@ -93,6 +110,12 @@ public class MapViewFragment extends SupportMapFragment
 
   @Override
   public void onMarkerClick(Marker marker) {
+    MarkerView markerView = MarkerView.getMarkerView(marker);
+    if (markerView != null) {
+      markerView.onPress();
+      return;
+    }
+
     emitEvent("onMarkerClick", ObjectTranslationUtil.getMapFromMarker(marker));
   }
 
@@ -126,13 +149,27 @@ public class MapViewFragment extends SupportMapFragment
     emitEvent("onMapClick", ObjectTranslationUtil.getMapFromLatLng(latLng));
   }
 
+  @Override
+  public void onMapDrag(CameraPosition cameraPosition) {
+    WritableMap map = Arguments.createMap();
+    map.putMap(
+        Constants.CAMERA_POSITION_KEY,
+        ObjectTranslationUtil.getMapFromCameraPosition(cameraPosition));
+    emitEvent("onMapDrag", map);
+  }
+
+  @Override
+  public void onMapDragEnd(CameraPosition cameraPosition) {
+    WritableMap map = Arguments.createMap();
+    map.putMap(
+        Constants.CAMERA_POSITION_KEY,
+        ObjectTranslationUtil.getMapFromCameraPosition(cameraPosition));
+    emitEvent("onMapDragEnd", map);
+  }
+
   public MapViewController getMapController() {
     return mMapViewController;
   }
-
-  public void applyStylingOptions() {}
-
-  public void setStylingOptions(StylingOptions stylingOptions) {}
 
   public void setMapStyle(String url) {
     mMapViewController.setMapStyle(url);
@@ -140,6 +177,18 @@ public class MapViewFragment extends SupportMapFragment
 
   public GoogleMap getGoogleMap() {
     return mGoogleMap;
+  }
+
+  @Override
+  public void setMapColorScheme(@MapColorScheme int mapColorScheme) {
+    this.mapColorScheme = mapColorScheme;
+    applyMapColorSchemeToMap();
+  }
+
+  private void applyMapColorSchemeToMap() {
+    if (mMapViewController != null) {
+      mMapViewController.setColorScheme(mapColorScheme);
+    }
   }
 
   private void emitEvent(String eventName, @Nullable WritableMap data) {

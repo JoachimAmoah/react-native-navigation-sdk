@@ -15,4 +15,5 @@
  */
 
 export * from './mapView';
+export * from './markerView';
 export * from './types';

@@ -18,6 +18,7 @@
 #import <React/RCTConvert.h>
 #import <React/RCTUIManager.h>
 #import "CustomTypes.h"
+#import "MarkerView.h"
 #import "NavView.h"
 #import "NavViewController.h"
 #import "NavViewModule.h"
@@ -40,6 +41,12 @@ RCT_EXPORT_MODULE();
     _navViewModule.viewControllers = _viewControllers;
   }
   return self;
+}
+
+- (void)dealloc {
+  @synchronized(_viewControllers) {
+    [_viewControllers removeAllObjects];
+  }
 }
 
 - (UIView *)view {
@@ -74,12 +81,22 @@ RCT_EXPORT_MODULE();
 
 - (void)unregisterViewControllerForTag:(NSNumber *)reactTag {
   @synchronized(_viewControllers) {
+    NavViewController *viewController = [_viewControllers objectForKey:reactTag];
+    if (viewController) {
+      // Explicitly cleanup the view controller to release resources
+      dispatch_async(dispatch_get_main_queue(), ^{
+        [viewController.view removeFromSuperview];
+      });
+    }
     [_viewControllers removeObjectForKey:reactTag];
   }
 }
+
 RCT_EXPORT_VIEW_PROPERTY(onRecenterButtonClick, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onMapReady, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onMapClick, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onMapDrag, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onMapDragEnd, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onMarkerInfoWindowTapped, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onMarkerClick, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onPolylineClick, RCTDirectEventBlock);
@@ -88,21 +105,39 @@ RCT_EXPORT_VIEW_PROPERTY(onCircleClick, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onGroundOverlayClick, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onPromptVisibilityChanged, RCTDirectEventBlock);
 
-RCT_CUSTOM_VIEW_PROPERTY(fragmentType, NSNumber *, NavView) {
+RCT_CUSTOM_VIEW_PROPERTY(mapOptions, NSDictionary *, NavView) {
   if (json && json != (id)kCFNull) {
-    FragmentType fragmentType = (FragmentType)[json integerValue];
-    NavViewController *viewController =
-        [view initializeViewControllerWithFragmentType:fragmentType];
-    [self registerViewController:viewController forTag:view.reactTag];
-  }
-}
+    NSDictionary *mapOptions = [RCTConvert NSDictionary:json];
 
-RCT_CUSTOM_VIEW_PROPERTY(stylingOptions, NSDictionary *, NavView) {
-  NSDictionary *options = nil;
-  if (json && json != (id)kCFNull) {
-    options = [RCTConvert NSDictionary:json];
+    // Extract all properties and pass them to initialization method
+    id mapIdValue = mapOptions[@"mapId"];
+    NSString *mapId = [mapIdValue isKindOfClass:[NSNull class]] ? nil : mapIdValue;
+    id stylingValue = mapOptions[@"navigationStylingOptions"];
+    NSDictionary *stylingOptions =
+        [stylingValue isKindOfClass:[NSNull class]] ? nil : (NSDictionary *)stylingValue;
+    NSNumber *mapViewTypeNumber = mapOptions[@"mapViewType"];
+    id colorSchemeValue = mapOptions[@"mapColorScheme"];
+    NSNumber *mapColorScheme =
+        [colorSchemeValue isKindOfClass:[NSNull class]] ? nil : colorSchemeValue;
+    id nightModeValue = mapOptions[@"navigationNightMode"];
+    NSNumber *nightMode = [nightModeValue isKindOfClass:[NSNull class]] ? nil : nightModeValue;
+
+    NavViewController *existingViewController = [view getViewController];
+    if (existingViewController) {
+      [view applyStylingOptions:stylingOptions];
+      [view applyMapColorScheme:mapColorScheme];
+      [view applyNightMode:nightMode];
+    } else if (mapViewTypeNumber) {
+      MapViewType mapViewType = (MapViewType)[mapViewTypeNumber integerValue];
+      NavViewController *viewController =
+          [view initializeViewControllerWithMapViewType:mapViewType
+                                                  mapId:mapId
+                                         stylingOptions:stylingOptions
+                                         mapColorScheme:mapColorScheme
+                                              nightMode:nightMode];
+      [self registerViewController:viewController forTag:view.reactTag];
+    }
   }
-  [view applyStylingOptions:options];
 }
 
 RCT_EXPORT_METHOD(moveCamera

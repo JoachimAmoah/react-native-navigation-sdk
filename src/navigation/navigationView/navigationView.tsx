@@ -18,15 +18,17 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Platform, StyleSheet, View, findNodeHandle } from 'react-native';
 import { NavViewManager, type LatLng } from '../../shared';
 import { getNavigationViewController } from './navigationViewController';
-import type { NavigationViewProps } from './types';
+import { NavigationNightMode, type NavigationViewProps } from './types';
 import {
+  MapColorScheme,
   getMapViewController,
-  FragmentType,
+  MapViewType,
   type Circle,
   type GroundOverlay,
   type Marker,
   type Polygon,
   type Polyline,
+  type DragResult,
 } from '../../maps';
 
 export const NavigationView = (
@@ -74,6 +76,20 @@ export const NavigationView = (
   const onMapClick = useCallback(
     ({ nativeEvent: latlng }: { nativeEvent: LatLng }) => {
       props.mapViewCallbacks?.onMapClick?.(latlng);
+    },
+    [props.mapViewCallbacks]
+  );
+
+  const onMapDrag = useCallback(
+    ({ nativeEvent: result }: { nativeEvent: DragResult }) => {
+      props.mapViewCallbacks?.onMapDrag?.(result);
+    },
+    [props.mapViewCallbacks]
+  );
+
+  const onMapDragEnd = useCallback(
+    ({ nativeEvent: result }: { nativeEvent: DragResult }) => {
+      props.mapViewCallbacks?.onMapDragEnd?.(result);
     },
     [props.mapViewCallbacks]
   );
@@ -140,13 +156,20 @@ export const NavigationView = (
       <NavViewManager
         ref={onRefAssign}
         flex={1}
-        fragmentType={FragmentType.NAVIGATION}
-        stylingOptions={
-          (Platform.OS === 'android'
-            ? androidStylingOptions
-            : iOSStylingOptions) || {}
-        }
+        mapOptions={{
+          mapViewType: MapViewType.NAVIGATION,
+          mapId: props.mapId,
+          mapColorScheme: props.mapColorScheme ?? MapColorScheme.FOLLOW_SYSTEM,
+          navigationNightMode:
+            props.navigationNightMode ?? NavigationNightMode.AUTO,
+          navigationStylingOptions:
+            (Platform.OS === 'android'
+              ? androidStylingOptions
+              : iOSStylingOptions) || {},
+        }}
         onMapClick={onMapClick}
+        onMapDrag={onMapDrag}
+        onMapDragEnd={onMapDragEnd}
         onMapReady={onMapReady}
         onMarkerClick={onMarkerClick}
         onPolylineClick={onPolylineClick}

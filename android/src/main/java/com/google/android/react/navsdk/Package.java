@@ -29,7 +29,7 @@ public class Package implements ReactPackage {
 
   @Override
   public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
-    return Arrays.asList(NavViewManager.getInstance(reactContext));
+    return Arrays.asList(NavViewManager.getInstance(reactContext), new MarkerViewManager());
   }
 
   @Override

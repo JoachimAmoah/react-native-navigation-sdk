@@ -22,11 +22,24 @@ import {
   type ViewProps,
 } from 'react-native';
 import type { LatLng } from '.';
-import type { Circle, GroundOverlay, Marker, Polygon, Polyline } from '../maps';
+import type {
+  Circle,
+  DragResult,
+  MapColorScheme,
+  GroundOverlay,
+  Marker,
+  Polygon,
+  Polyline,
+} from '../maps';
 import type {
   DirectEventHandler,
   Int32,
 } from 'react-native/Libraries/Types/CodegenTypesNamespace';
+import type {
+  AndroidStylingOptions,
+  NavigationNightMode,
+  iOSStylingOptions,
+} from '../navigation';
 
 // NavViewManager is responsible for managing both the regular map fragment as well as the navigation map view fragment.
 export const viewManagerName =
@@ -66,10 +79,17 @@ export const commands = (
 
 export interface NativeNavViewProps extends ViewProps {
   flex?: number | undefined;
-  fragmentType: Int32;
-  stylingOptions?: unknown | undefined;
+  mapOptions: {
+    mapViewType: Int32;
+    mapId?: string;
+    navigationStylingOptions?: AndroidStylingOptions | iOSStylingOptions;
+    mapColorScheme?: MapColorScheme;
+    navigationNightMode?: NavigationNightMode;
+  };
   onMapReady?: DirectEventHandler<null>;
   onMapClick?: DirectEventHandler<LatLng>;
+  onMapDrag?: DirectEventHandler<DragResult>;
+  onMapDragEnd?: DirectEventHandler<DragResult>;
   onMarkerClick?: DirectEventHandler<Marker>;
   onPolylineClick?: DirectEventHandler<Polyline>;
   onPolygonClick?: DirectEventHandler<Polygon>;
