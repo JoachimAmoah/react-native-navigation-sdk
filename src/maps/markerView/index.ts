@@ -14,5 +14,5 @@
  * limitations under the License.
  */
 
-export * from './markerView';
 export * from './types';
+export * from './markerView';

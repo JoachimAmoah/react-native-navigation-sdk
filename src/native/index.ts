@@ -24,3 +24,4 @@ export {
   type NavViewModuleSpec,
 } from './NativeNavViewModule';
 export { default as NavView } from './NativeNavViewComponent';
+export { default as MarkerView } from './NativeMarkerViewComponent';
