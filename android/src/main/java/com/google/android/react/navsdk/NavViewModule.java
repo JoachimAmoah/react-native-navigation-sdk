@@ -73,7 +73,12 @@ public class NavViewModule extends NativeNavViewModuleSpec {
             return;
           }
 
-          WritableMap map = ObjectTranslationUtil.getMapFromCameraPosition(cp);
+          LatLng target = cp.target;
+          WritableMap map = Arguments.createMap();
+          map.putDouble("bearing", cp.bearing);
+          map.putDouble("tilt", cp.tilt);
+          map.putDouble("zoom", cp.zoom);
+          map.putMap("target", ObjectTranslationUtil.getMapFromLatLng(target));
 
           promise.resolve(map);
         });

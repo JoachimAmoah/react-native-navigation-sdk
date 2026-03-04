@@ -57,7 +57,7 @@ type MarkerOptionsSpec = Readonly<{
   draggable?: WithDefault<boolean, false>;
   flat?: WithDefault<boolean, false>;
   visible?: WithDefault<boolean, true>;
-  zIndex?: WithDefault<Double, null>;
+  zIndex?: WithDefault<Int32, 0>;
 }>;
 
 type CircleOptionsSpec = Readonly<{

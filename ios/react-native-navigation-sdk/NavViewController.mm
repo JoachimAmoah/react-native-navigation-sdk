@@ -20,6 +20,7 @@
 #import <UIKit/UIKit.h>
 #import <UserNotifications/UserNotifications.h>
 #import "CustomTypes.h"
+#import "MarkerView.h"
 #import "NavModule.h"
 #import "ObjectTranslationUtil.h"
 
@@ -291,6 +292,12 @@
 }
 
 - (BOOL)mapView:(GMSMapView *)mapView didTapMarker:(GMSMarker *)marker {
+  MarkerView *markerView = [MarkerView getMarkerView:marker];
+  if (markerView != nil) {
+    [markerView handleOnPress];
+    return markerView.preventDefaultOnClick;
+  }
+
   [_viewCallbacks handleMarkerClick:marker];
   return FALSE;
 }

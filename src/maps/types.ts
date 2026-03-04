@@ -17,6 +17,7 @@
 import type { StyleProp, ViewStyle, ColorValue } from 'react-native';
 import type { LatLng } from '../shared/types';
 import type { MapViewController, MapViewType, Padding } from './mapView/types';
+import type { PropsWithChildren } from 'react';
 
 /**
  * An immutable class that aggregates all camera position parameters such as
@@ -205,7 +206,7 @@ export interface DragResult {
 /**
  * `MapViewProps` interface provides methods focused on managing map events and state changes.
  */
-export interface MapViewProps {
+export interface MapViewProps extends PropsWithChildren {
   /**
    * Callback function invoked when GoogleMap is ready.
    */

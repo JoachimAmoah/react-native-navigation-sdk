@@ -16,6 +16,7 @@ package com.google.android.react.navsdk;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.facebook.react.bridge.Arguments;
@@ -82,7 +83,7 @@ public class MapViewFragment extends SupportMapFragment
           emitEvent("onMapReady", null);
 
           // Request layout to ensure fragment is properly sized
-          View fragmentView = getView();
+          ViewGroup fragmentView = (ViewGroup) getView();
           if (fragmentView != null) {
             fragmentView.requestLayout();
           }
@@ -96,6 +97,12 @@ public class MapViewFragment extends SupportMapFragment
 
   @Override
   public void onMarkerClick(Marker marker) {
+    MarkerView markerView = MarkerView.getMarkerView(marker);
+    if (markerView != null) {
+      markerView.handleOnPress();
+      return;
+    }
+
     String effectiveId = mMapViewController.getMarkerEffectiveId(marker.getId());
     emitEvent("onMarkerClick", ObjectTranslationUtil.getMapFromMarker(marker, effectiveId));
   }

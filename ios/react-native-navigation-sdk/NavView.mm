@@ -14,6 +14,7 @@
 
 #import "NavView.h"
 #import "FabricObjectTranslationUtil.h"
+#import "MarkerView.h"
 #import "NavModule.h"
 #import "NavViewController.h"
 #import "NavViewModule.h"
@@ -302,6 +303,21 @@ static const std::shared_ptr<const NavViewProps> kDefaultNavViewProps =
 - (void)layoutSubviews {
   [super layoutSubviews];
   _viewController.view.frame = self.bounds;
+}
+
+- (void)mountChildComponentView:(UIView *)subView index:(NSInteger)index {
+  if (subView == nil) {
+    return;
+  }
+
+  [super mountChildComponentView:subView index:index];
+
+  if ([subView isKindOfClass:[MarkerView class]]) {
+    MarkerView *markerView = (MarkerView *)subView;
+    dispatch_async(dispatch_get_main_queue(), ^{
+      [markerView createMarker:self.viewController];
+    });
+  }
 }
 
 // Event handler implementations using Fabric EventEmitter

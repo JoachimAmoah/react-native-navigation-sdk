@@ -25,13 +25,12 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.common.MapBuilder;
 import com.facebook.react.module.annotations.ReactModule;
-import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
+import com.facebook.react.uimanager.ViewGroupManager;
 import com.facebook.react.uimanager.ViewManagerDelegate;
 import com.facebook.react.uimanager.annotations.ReactProp;
 import com.facebook.react.viewmanagers.NavViewManagerDelegate;
 import com.facebook.react.viewmanagers.NavViewManagerInterface;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.libraries.navigation.StylingOptions;
@@ -44,7 +43,7 @@ import java.util.Map;
 // navigation map view fragment.
 //
 @ReactModule(name = NavViewManager.REACT_CLASS)
-public class NavViewManager extends SimpleViewManager<FrameLayout>
+public class NavViewManager extends ViewGroupManager<FrameLayout>
     implements NavViewManagerInterface<FrameLayout> {
 
   public static final String REACT_CLASS = "NavView";
@@ -839,13 +838,17 @@ public class NavViewManager extends SimpleViewManager<FrameLayout>
     view.post(() -> layoutFragmentInView(view, mapViewFragment));
   }
 
-  public GoogleMap getGoogleMap(int viewId) {
-    try {
-      IMapViewFragment fragment = getFragmentForViewId(viewId);
-      if (fragment == null) return null;
-      return fragment.getGoogleMap();
-    } catch (Exception e) {
-      return null;
+  @Override
+  public void addView(@NonNull FrameLayout parent, @NonNull View child, int index) {
+    super.addView(parent, child, index);
+
+    MarkerView markerView = (MarkerView) child;
+    IMapViewFragment fragment = getFragmentForViewId(parent.getId());
+    if (fragment != null) {
+      MapViewController mapViewController = fragment.getMapController();
+      if (mapViewController != null) {
+        markerView.setMapViewController(mapViewController);
+      }
     }
   }
 }

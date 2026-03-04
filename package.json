@@ -122,7 +122,8 @@
     },
     "ios": {
       "componentProvider": {
-        "NavView": "NavView"
+        "NavView": "NavView",
+        "MarkerView": "MarkerView"
       },
       "modulesProvider": {
         "NavModule": "NavModule",

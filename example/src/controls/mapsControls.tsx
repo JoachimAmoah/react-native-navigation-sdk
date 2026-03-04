@@ -32,6 +32,7 @@ import {
   type Polyline,
   type Polygon,
   type GroundOverlay,
+  type MarkerOptions,
 } from '@googlemaps/react-native-navigation-sdk';
 
 export interface MapControlsProps {
@@ -69,6 +70,8 @@ export interface MapControlsProps {
   readonly onZoomControlsEnabledChange?: (enabled: boolean) => void;
   readonly zoomGesturesEnabled?: boolean;
   readonly onZoomGesturesEnabledChange?: (enabled: boolean) => void;
+  addMarkerView?: (_: MarkerOptions) => void;
+  clearMarkerViews?: () => void;
 }
 
 export const defaultZoom: number = 15;
@@ -103,6 +106,8 @@ const MapsControls: React.FC<MapControlsProps> = ({
   onZoomControlsEnabledChange,
   zoomGesturesEnabled = true,
   onZoomGesturesEnabledChange,
+  addMarkerView,
+  clearMarkerViews,
 }) => {
   const mapTypeOptions = ['None', 'Normal', 'Satellite', 'Terrain', 'Hybrid'];
   const colorSchemeOptions = ['Follow System', 'Light', 'Dark'];
@@ -482,6 +487,21 @@ const MapsControls: React.FC<MapControlsProps> = ({
         <ExampleAppButton
           title="Add custom marker"
           onPress={() => addCustomMarker()}
+        />
+        <ExampleAppButton
+          title="Add marker view"
+          onPress={async () => {
+            const cameraPosition = await mapViewController.getCameraPosition();
+            addMarkerView?.({
+              position: cameraPosition.target,
+              visible: true,
+              rotation: 45,
+            });
+          }}
+        />
+        <ExampleAppButton
+          title="Clear marker views"
+          onPress={() => clearMarkerViews?.()}
         />
         <ExampleAppButton title="Add circle" onPress={addCircle} />
         <ExampleAppButton title="Add polyline" onPress={addPolyline} />

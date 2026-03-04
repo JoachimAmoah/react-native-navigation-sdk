@@ -201,6 +201,12 @@ public class NavViewFragment extends SupportNavigationFragment
 
   @Override
   public void onMarkerClick(Marker marker) {
+    MarkerView markerView = MarkerView.getMarkerView(marker);
+    if (markerView != null) {
+      markerView.handleOnPress();
+      return;
+    }
+
     String effectiveId = mMapViewController.getMarkerEffectiveId(marker.getId());
     emitEvent("onMarkerClick", ObjectTranslationUtil.getMapFromMarker(marker, effectiveId));
   }

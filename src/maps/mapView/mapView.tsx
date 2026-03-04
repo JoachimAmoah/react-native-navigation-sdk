@@ -122,7 +122,9 @@ export const MapView = (props: MapViewProps): React.JSX.Element => {
       onCircleClick={onCircleClick}
       onGroundOverlayClick={onGroundOverlayClick}
       onMarkerInfoWindowTapped={onMarkerInfoWindowTapped}
-    />
+    >
+      {props.children}
+    </NavView>
   );
 };
 
