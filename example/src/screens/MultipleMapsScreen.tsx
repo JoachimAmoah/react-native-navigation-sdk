@@ -14,8 +14,14 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { View } from 'react-native';
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+  useReducer,
+} from 'react';
+import { Text, View } from 'react-native';
 import { ExampleAppButton } from '../controls/ExampleAppButton';
 import PagerView, {
   type PagerViewOnPageSelectedEvent,
@@ -38,6 +44,8 @@ import {
   type Polyline,
   useNavigation,
   MapView,
+  type DragResult,
+  type MarkerOptions,
 } from '@googlemaps/react-native-navigation-sdk';
 import MapsControls from '../controls/mapsControls';
 import NavigationControls from '../controls/navigationControls';
@@ -46,6 +54,7 @@ import { showSnackbar } from '../helpers/snackbar';
 import { CommonStyles, ControlStyles } from '../styles/components';
 import { MapStylingOptions } from '../styles/mapStyling';
 import usePermissions from '../checkPermissions';
+import { MarkerView } from '../../../src/maps/markerView';
 
 enum OverlayType {
   None = 'None',
@@ -53,6 +62,29 @@ enum OverlayType {
   MapControls1 = 'MapControls1',
   MapControls2 = 'MapControls2',
 }
+
+const CustomMarkerView: React.FC<MarkerOptions> = markerOptions => {
+  const [value, incrementValue] = useReducer(prev => prev + 1, 0);
+
+  return (
+    <MarkerView
+      visible
+      preventDefaultOnClick
+      {...markerOptions}
+      renderId={`${value}`}
+      groundAnchor={{
+        x: 0.5,
+        y: 0.5,
+      }}
+      onMarkerPress={() => incrementValue()}
+    >
+      <View style={CommonStyles.markerView}>
+        <Text style={CommonStyles.markerViewText}>{value}</Text>
+        <Text style={CommonStyles.markerViewText}>{'click me'}</Text>
+      </View>
+    </MarkerView>
+  );
+};
 
 const MultipleMapsScreen = () => {
   const insets = useSafeAreaInsets();
@@ -215,6 +247,18 @@ const MultipleMapsScreen = () => {
     );
   }, []);
 
+  const onMapDrag1 = useCallback((result: DragResult) => {
+    showSnackbar(
+      `Map 1: Camera at ${result.cameraPosition.target.lat.toFixed(4)}, ${result.cameraPosition.target.lng.toFixed(4)}, ${result.cameraPosition.zoom?.toFixed(4)}`
+    );
+  }, []);
+
+  const onMapDragEnd1 = useCallback((result: DragResult) => {
+    showSnackbar(
+      `Map 1: Camera at ${result.cameraPosition.target.lat.toFixed(4)}, ${result.cameraPosition.target.lng.toFixed(4)}, ${result.cameraPosition.zoom?.toFixed(4)}`
+    );
+  }, []);
+
   // Map 2 callbacks
   const onMarkerClick2 = useCallback(
     (marker: Marker) => {
@@ -258,6 +302,18 @@ const MultipleMapsScreen = () => {
     );
   }, []);
 
+  const onMapDrag2 = useCallback((result: DragResult) => {
+    showSnackbar(
+      `Map 2: Camera at ${result.cameraPosition.target.lat.toFixed(4)}, ${result.cameraPosition.target.lng.toFixed(4)}, ${result.cameraPosition.zoom?.toFixed(4)}`
+    );
+  }, []);
+
+  const onMapDragEnd2 = useCallback((result: DragResult) => {
+    showSnackbar(
+      `Map 2: Camera at ${result.cameraPosition.target.lat.toFixed(4)}, ${result.cameraPosition.target.lng.toFixed(4)}, ${result.cameraPosition.zoom?.toFixed(4)}`
+    );
+  }, []);
+
   const closeOverlay = (): void => {
     setOverlayType(OverlayType.None);
   };
@@ -273,6 +329,8 @@ const MultipleMapsScreen = () => {
     setCurrentPage(pageIndex);
     pagerRef.current?.setPage(pageIndex);
   }, []);
+
+  const [markers, setMarkers] = useState<MarkerOptions[]>([]);
 
   return arePermissionsApproved ? (
     <View style={[CommonStyles.container, { paddingBottom: insets.bottom }]}>
@@ -320,6 +378,8 @@ const MultipleMapsScreen = () => {
                 onPolylineClick={onPolylineClick1}
                 onMarkerInfoWindowTapped={onMarkerInfoWindowTapped1}
                 onMapClick={onMapClick1}
+                onMapDrag={onMapDrag1}
+                onMapDragEnd={onMapDragEnd1}
                 onMapViewControllerCreated={setMapViewController1}
                 onNavigationViewControllerCreated={setNavigationViewController1}
               />
@@ -346,8 +406,14 @@ const MultipleMapsScreen = () => {
                 onPolylineClick={onPolylineClick2}
                 onMarkerInfoWindowTapped={onMarkerInfoWindowTapped2}
                 onMapClick={onMapClick2}
+                onMapDrag={onMapDrag2}
+                onMapDragEnd={onMapDragEnd2}
                 onMapViewControllerCreated={setMapViewController2}
-              />
+              >
+                {markers?.map((markerOptions, idx) => (
+                  <CustomMarkerView key={idx} {...markerOptions} />
+                ))}
+              </MapView>
               {currentPage === 1 && (
                 <View style={ControlStyles.controlButtons}>
                   <ExampleAppButton
@@ -398,6 +464,8 @@ const MultipleMapsScreen = () => {
             >
               <MapsControls
                 mapViewController={mapViewController2}
+                addMarkerView={marker => setMarkers([...markers, marker])}
+                clearMarkerViews={() => setMarkers([])}
                 mapColorScheme={mapColorScheme2}
                 onMapColorSchemeChange={setMapColorScheme2}
               />

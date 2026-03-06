@@ -42,6 +42,11 @@ export const CommonStyles = StyleSheet.create({
     justifyContent: 'space-between',
   },
 
+  markerView: {
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+  },
+
   // Card styles
   card: {
     backgroundColor: Colors.surface,
@@ -123,6 +128,11 @@ export const CommonStyles = StyleSheet.create({
     color: Colors.error,
     textAlign: 'center',
     margin: Spacing.xl,
+  },
+
+  markerViewText: {
+    fontSize: 30,
+    fontWeight: 'bold',
   },
 
   // Info box styles

@@ -56,7 +56,8 @@
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
     "prepare": "bob build",
     "prepare:example": "yarn workspace react-native-navigation-sdk-sample prepare",
-    "build": "bob build"
+    "build": "bob build",
+    "postinstall": "bob build"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^19.2.2",
@@ -122,7 +123,8 @@
     },
     "ios": {
       "componentProvider": {
-        "NavView": "NavView"
+        "NavView": "NavView",
+        "MarkerView": "MarkerView"
       },
       "modulesProvider": {
         "NavModule": "NavModule",

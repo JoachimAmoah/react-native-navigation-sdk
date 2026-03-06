@@ -1,5 +1,5 @@
-/**
- * Copyright 2026 Google LLC
+/*
+ * Copyright 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,24 @@
  * limitations under the License.
  */
 
-export { default as NavModule, type NavModuleSpec } from './NativeNavModule';
-export {
-  default as NavAutoModule,
-  type NavAutoModuleSpec,
-} from './NativeNavAutoModule';
-export {
-  default as NavViewModule,
-  type NavViewModuleSpec,
-} from './NativeNavViewModule';
-export { default as NavView } from './NativeNavViewComponent';
-export { default as MarkerView } from './NativeMarkerViewComponent';
+#import <GoogleNavigation/GoogleNavigation.h>
+#import <React/RCTBridge.h>
+#import <React/RCTComponent.h>
+#import <React/RCTViewComponentView.h>
+#import <React/RCTViewManager.h>
+#import <UIKit/UIKit.h>
+#import "NavViewController.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
+@interface MarkerView : RCTViewComponentView
+
+@property(nonatomic, readonly) BOOL preventDefaultOnClick;
+
++ (MarkerView *)getMarkerView:(GMSMarker *)marker;
+- (void)handleOnPress;
+- (void)createMarker:(NavViewController *)mapViewController;
+
+@end
+
+NS_ASSUME_NONNULL_END

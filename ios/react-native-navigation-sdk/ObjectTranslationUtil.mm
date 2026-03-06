@@ -251,6 +251,17 @@
   return CLLocationCoordinate2DMake(latitude, longitude);
 }
 
++ (NSDictionary *)transformCameraPositionToDictionary:(GMSCameraPosition *)cam {
+  NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
+  dictionary[@"bearing"] = @(cam.bearing);
+  dictionary[@"tilt"] = @(cam.viewingAngle);
+  dictionary[@"zoom"] = @(cam.zoom);
+
+  dictionary[@"target"] = @{@"lat" : @(cam.target.latitude), @"lng" : @(cam.target.longitude)};
+
+  return dictionary;
+}
+
 + (BOOL)isIdOnUserData:(nullable id)userData {
   if (userData == nil) {
     return NO;

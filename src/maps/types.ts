@@ -17,6 +17,7 @@
 import type { StyleProp, ViewStyle, ColorValue } from 'react-native';
 import type { LatLng } from '../shared/types';
 import type { MapViewController, MapViewType, Padding } from './mapView/types';
+import type { PropsWithChildren } from 'react';
 
 /**
  * An immutable class that aggregates all camera position parameters such as
@@ -195,9 +196,17 @@ export enum MapColorScheme {
 }
 
 /**
+ * Defines the results of a map drag event.
+ */
+export interface DragResult {
+  /** Camera position. */
+  cameraPosition: CameraPosition;
+}
+
+/**
  * `MapViewProps` interface provides methods focused on managing map events and state changes.
  */
-export interface MapViewProps {
+export interface MapViewProps extends PropsWithChildren {
   /**
    * Callback function invoked when GoogleMap is ready.
    */
@@ -238,6 +247,18 @@ export interface MapViewProps {
    * @param latLng position where the click occurred.
    */
   readonly onMapClick?: (latLng: LatLng) => void;
+
+  /**
+   * Callback invoked repeated when map is being dragged.
+   * @param result The drag result at that instant.
+   */
+  readonly onMapDrag?: (result: DragResult) => void;
+
+  /**
+   * Callback invoked when map drag ends.
+   * @param result The drag result at that instant.
+   */
+  readonly onMapDragEnd?: (result: DragResult) => void;
 
   readonly style?: StyleProp<ViewStyle> | undefined;
 

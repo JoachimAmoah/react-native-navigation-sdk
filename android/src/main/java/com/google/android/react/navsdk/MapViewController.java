@@ -47,6 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
+import javax.annotation.Nullable;
 
 public class MapViewController implements INavigationViewControllerProperties {
   private GoogleMap mGoogleMap;
@@ -85,6 +86,12 @@ public class MapViewController implements INavigationViewControllerProperties {
     mGoogleMap.setOnMarkerClickListener(
         marker -> {
           mNavigationViewCallback.onMarkerClick(marker);
+
+          MarkerView markerView = MarkerView.getMarkerView(marker);
+          if (markerView != null) {
+            return markerView.isPreventDefaultOnClick();
+          }
+
           return false;
         });
 
@@ -98,6 +105,10 @@ public class MapViewController implements INavigationViewControllerProperties {
     mGoogleMap.setOnInfoWindowClickListener(
         marker -> mNavigationViewCallback.onMarkerInfoWindowTapped(marker));
     mGoogleMap.setOnMapClickListener(latLng -> mNavigationViewCallback.onMapClick(latLng));
+    mGoogleMap.setOnCameraMoveListener(
+        () -> mNavigationViewCallback.onMapDrag(mGoogleMap.getCameraPosition()));
+    mGoogleMap.setOnCameraIdleListener(
+        () -> mNavigationViewCallback.onMapDragEnd(mGoogleMap.getCameraPosition()));
   }
 
   public GoogleMap getGoogleMap() {
@@ -233,6 +244,19 @@ public class MapViewController implements INavigationViewControllerProperties {
       int fillColor = CollectionUtil.getInt("fillColor", optionsMap, 0);
       circle.setFillColor(fillColor);
     }
+  }
+
+  public Marker addMarkerView(MarkerOptions markerOptions, @Nullable List<Marker> markerList) {
+    if (mGoogleMap == null) {
+      return null;
+    }
+
+    Marker marker = mGoogleMap.addMarker(markerOptions);
+    if (markerList != null) {
+      markerList.add(marker);
+    }
+
+    return marker;
   }
 
   public Marker addMarker(Map<String, Object> optionsMap) {

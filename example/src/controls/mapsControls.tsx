@@ -32,6 +32,7 @@ import {
   type Polyline,
   type Polygon,
   type GroundOverlay,
+  type MarkerOptions,
 } from '@googlemaps/react-native-navigation-sdk';
 
 export interface MapControlsProps {
@@ -69,6 +70,8 @@ export interface MapControlsProps {
   readonly onZoomControlsEnabledChange?: (enabled: boolean) => void;
   readonly zoomGesturesEnabled?: boolean;
   readonly onZoomGesturesEnabledChange?: (enabled: boolean) => void;
+  addMarkerView?: (_: MarkerOptions) => void;
+  clearMarkerViews?: () => void;
 }
 
 export const defaultZoom: number = 15;
@@ -103,6 +106,8 @@ const MapsControls: React.FC<MapControlsProps> = ({
   onZoomControlsEnabledChange,
   zoomGesturesEnabled = true,
   onZoomGesturesEnabledChange,
+  addMarkerView,
+  clearMarkerViews,
 }) => {
   const mapTypeOptions = ['None', 'Normal', 'Satellite', 'Terrain', 'Hybrid'];
   const colorSchemeOptions = ['Follow System', 'Light', 'Dark'];
@@ -374,6 +379,42 @@ const MapsControls: React.FC<MapControlsProps> = ({
     setCustomPaddingEnabled(!customPaddingEnabled);
   };
 
+  const coordinateForPoint = async () => {
+    const cameraPosition = await mapViewController.getCameraPosition();
+    const point = await mapViewController.pointForCoordinate(
+      cameraPosition.target
+    );
+    const coordinate = await mapViewController.coordinateForPoint(point);
+    showSnackbar(
+      `point, corrdinate: ${point.x.toFixed(4)}, ${point.y.toFixed(4)} ${coordinate.lat.toFixed(4)}, ${coordinate.lng.toFixed(4)}`
+    );
+  };
+
+  const pointForCoordinate = async () => {
+    const { target: coordinate } = await mapViewController.getCameraPosition();
+    const point = await mapViewController.pointForCoordinate(coordinate);
+    showSnackbar(
+      `point, corrdinate: ${point.x.toFixed(4)}, ${point.y.toFixed(4)} ${coordinate.lat.toFixed(4)}, ${coordinate.lng.toFixed(4)}`
+    );
+  };
+
+  const fitBounds = async () => {
+    const bounds = await mapViewController.getBounds();
+    bounds.northEast.lat -= 1;
+    bounds.northEast.lng -= 1;
+    bounds.southWest.lat += 1;
+    bounds.southWest.lng += 1;
+
+    await mapViewController.fitBounds({ bounds });
+  };
+
+  const getBounds = async () => {
+    const bounds = await mapViewController.getBounds();
+    showSnackbar(
+      `ne, sw: ${bounds.northEast.lat.toFixed(4)}, ${bounds.northEast.lng.toFixed(4)} ${bounds.southWest.lat.toFixed(4)}, ${bounds.southWest.lng.toFixed(4)}`
+    );
+  };
+
   const setMapColorScheme = (index: number) => {
     const scheme =
       index === 1
@@ -421,6 +462,23 @@ const MapsControls: React.FC<MapControlsProps> = ({
           title="Get camera position"
           onPress={getCameraPositionClicked}
         />
+        <ExampleAppButton
+          title="Coordinate for point"
+          onPress={coordinateForPoint}
+        />
+        <ExampleAppButton
+          title="Point for coordinate"
+          onPress={pointForCoordinate}
+        />
+        <ExampleAppButton title="Get bounds" onPress={getBounds} />
+        <ExampleAppButton
+          title="Fit bounds (Shrink edges by 1°)"
+          onPress={fitBounds}
+        />
+        <ExampleAppButton
+          title="Get camera position"
+          onPress={getCameraPositionClicked}
+        />
       </Accordion>
 
       {/* Map Overlays */}
@@ -429,6 +487,21 @@ const MapsControls: React.FC<MapControlsProps> = ({
         <ExampleAppButton
           title="Add custom marker"
           onPress={() => addCustomMarker()}
+        />
+        <ExampleAppButton
+          title="Add marker view"
+          onPress={async () => {
+            const cameraPosition = await mapViewController.getCameraPosition();
+            addMarkerView?.({
+              position: cameraPosition.target,
+              visible: true,
+              rotation: 45,
+            });
+          }}
+        />
+        <ExampleAppButton
+          title="Clear marker views"
+          onPress={() => clearMarkerViews?.()}
         />
         <ExampleAppButton title="Add circle" onPress={addCircle} />
         <ExampleAppButton title="Add polyline" onPress={addPolyline} />
