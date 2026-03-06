@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { createContext, type ReactNode, useContext } from 'react';
+import React, { createContext, useContext, type ReactNode } from 'react';
 import type {
   NavigationController,
   TaskRemovedBehavior,

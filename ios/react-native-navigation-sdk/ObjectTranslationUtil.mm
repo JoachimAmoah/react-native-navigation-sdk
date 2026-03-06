@@ -244,6 +244,13 @@
   return path;
 }
 
++ (CLLocationCoordinate2D)getLocationCoordinateFrom:(NSDictionary *)latLngMap {
+  double latitude = [[latLngMap objectForKey:@"lat"] doubleValue];
+  double longitude = [[latLngMap objectForKey:@"lng"] doubleValue];
+
+  return CLLocationCoordinate2DMake(latitude, longitude);
+}
+
 + (NSDictionary *)transformCameraPositionToDictionary:(GMSCameraPosition *)cam {
   NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
   dictionary[@"bearing"] = @(cam.bearing);

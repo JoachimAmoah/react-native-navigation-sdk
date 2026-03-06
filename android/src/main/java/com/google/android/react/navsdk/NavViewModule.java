@@ -35,7 +35,6 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.VisibleRegion;
 import com.google.maps.android.rn.navsdk.NativeNavViewModuleSpec;
 import java.util.Map;
 import java.util.Objects;
@@ -113,8 +112,8 @@ public class NavViewModule extends NativeNavViewModuleSpec {
       ReactApplicationContext context, GoogleMap map, ReadableMap pointMap, final Promise promise) {
     try {
       float density = context.getResources().getDisplayMetrics().density;
-      int x = (int) density * CollectionUtil.getInt("x", pointMap.toHashMap(), 0);
-      int y = (int) density * CollectionUtil.getInt("y", pointMap.toHashMap(), 0);
+      int x = (int) (density * CollectionUtil.getDouble("x", pointMap.toHashMap(), 0));
+      int y = (int) (density * CollectionUtil.getDouble("y", pointMap.toHashMap(), 0));
       Point point = new Point(x, y);
       LatLng latLng = map.getProjection().fromScreenLocation(point);
 
@@ -226,9 +225,9 @@ public class NavViewModule extends NativeNavViewModuleSpec {
   }
 
   public static void resolveGetBounds(GoogleMap map, final Promise promise) {
-    VisibleRegion visibleRegion = map.getProjection().getVisibleRegion();
-    LatLng northEast = visibleRegion.farRight;
-    LatLng southWest = visibleRegion.nearLeft;
+    LatLngBounds latLngBounds = map.getProjection().getVisibleRegion().latLngBounds;
+    LatLng northEast = latLngBounds.northeast;
+    LatLng southWest = latLngBounds.southwest;
 
     WritableMap northEastMap = ObjectTranslationUtil.getMapFromLatLng(northEast);
     WritableMap southWestMap = ObjectTranslationUtil.getMapFromLatLng(southWest);

@@ -13,6 +13,8 @@
  */
 package com.google.android.react.navsdk;
 
+import static java.security.AccessController.getContext;
+
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;

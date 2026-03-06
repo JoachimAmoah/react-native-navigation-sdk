@@ -776,9 +776,7 @@
 
 - (void)getBounds:(OnDictionaryResult)completionBlock {
   GMSVisibleRegion visibleRegion = [_mapView.projection visibleRegion];
-  GMSCoordinateBounds *bounds =
-      [[GMSCoordinateBounds alloc] initWithCoordinate:visibleRegion.nearLeft
-                                           coordinate:visibleRegion.farRight];
+  GMSCoordinateBounds *bounds = [[GMSCoordinateBounds alloc] initWithRegion:visibleRegion];
   CLLocationCoordinate2D northEast = bounds.northEast;
   CLLocationCoordinate2D southWest = bounds.southWest;
 

@@ -117,7 +117,10 @@ using namespace facebook::react;
   }
 
   [_iconView setFrame:CGRectMake(0, 0, width, height)];
-  _marker.iconView = _iconView;
+
+  if (width > 0 && height > 0) {
+    _marker.iconView = _iconView;
+  }
 
   _mapView = _mapViewController.mapView;
   if (_visible) {
@@ -145,7 +148,7 @@ using namespace facebook::react;
     [CATransaction commit];
   }
 
-  if (oldViewProps.visible != newViewProps.visible) {
+  if (_visible != newViewProps.visible) {
     _visible = newViewProps.visible;
     _marker.map = _visible ? _mapView : nil;
   }
@@ -211,7 +214,7 @@ using namespace facebook::react;
     _marker.zIndex = newViewProps.overlayZIndex;
   }
 
-  if (oldViewProps.preventDefaultOnClick != newViewProps.preventDefaultOnClick) {
+  if (_preventDefaultOnClick != newViewProps.preventDefaultOnClick) {
     _preventDefaultOnClick = newViewProps.preventDefaultOnClick;
   }
 
